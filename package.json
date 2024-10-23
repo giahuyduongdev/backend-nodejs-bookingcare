@@ -1,0 +1,36 @@
+{
+  "name": "backend-nodejs-bookingcare",
+  "version": "1.0.0",
+  "description": "backend nodejs bookingcare",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+      "start": "nodemon --exec babel-node src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/giahuyduongdev/backend-nodejs-bookingcare.git"
+  },
+  "keywords": [
+    "nodejs",
+    "express"
+  ],
+  "author": "Gia Huy Duong",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/giahuyduongdev/backend-nodejs-bookingcare/issues"
+  },
+  "homepage": "https://github.com/giahuyduongdev/backend-nodejs-bookingcare#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "ejs": "^3.1.5",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/node": "^7.12.10",
+    "@babel/preset-env": "^7.12.10",
+    "nodemon": "^2.0.7"
+  }
+}
