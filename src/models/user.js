@@ -14,12 +14,22 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   User.init({
+    email: DataTypes.STRING,
+    password: DataTypes.STRING,
     firstName: DataTypes.STRING,
     lastName: DataTypes.STRING,
-    email: DataTypes.STRING
-  }, {
+    address: DataTypes.STRING,
+    gender: DataTypes.BOOLEAN,
+    typeRole: DataTypes.STRING,
+    keyRole: DataTypes.STRING,
+  }, 
+  {
     sequelize,
     modelName: 'User',
+    tableName: 'Users',
+  // disable the modification of tablenames; By default, sequelize will automatically
+  // transform all passed model names (first parameter of define) into plural.
+  // if you don't want that, set the following
   });
   return User;
 };

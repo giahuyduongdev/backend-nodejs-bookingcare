@@ -1,7 +1,6 @@
 'use strict';
 
-
-require('dotenv').config();
+require('dotenv').config(); // // Tải các biến môi trường từ một file .env và gán chúng vào đối tượng process.env của Node.js.
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
