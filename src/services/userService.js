@@ -26,17 +26,17 @@ let handleUserLogin = (email, password) => {
           }
           else{
             userData.errCode = 3
-            userData.errMessage = `Wrong password`
+            userData.errMessage = `wrong password`
           }
         }else{
           userData.errCode = 2
-          userData.errMessage = `User is not found `
+          userData.errMessage = `User's not found `
         }
         resolve(userData)
       }else{
         //return error
         userData.errCode = 1
-        userData.errMessage = `Your email isn't exit `
+        userData.errMessage = `Your's Email isn't exist in your system. Please try other email`
       }
       resolve(userData)// gán giá trị 
     }catch(e){
