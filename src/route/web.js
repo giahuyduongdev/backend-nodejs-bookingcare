@@ -6,15 +6,14 @@ let router = express.Router();
 
 let initWebRoutes = (app) => {
   router.get("/", homeController.getHomePage);
-  router.get("/about", homeController.getAboutPage);
-  router.get("/crud", homeController.getCRUD);
+  router.get("/create-user", homeController.createUser);
 
-  router.post("/post-crud", homeController.postCRUD);
-  router.get("/get-crud", homeController.displayCRUD);
-  router.get("/edit-crud", homeController.editCRUD);
+  router.post("/post-user", homeController.postUser);
+  router.get("/get-user", homeController.displayUser);
+  router.get("/edit-user", homeController.editUser);
 
-  router.post("/put-crud", homeController.putCRUD);
-  router.get("/delete-crud", homeController.deleteCRUD);
+  router.post("/post-edit-user", homeController.postEditUser);
+  router.get("/delete-user", homeController.deleteUser);
   //-----------------------------------------------------------------------API
   router.post('/api/login', userController.handleLogin);
 

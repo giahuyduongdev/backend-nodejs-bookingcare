@@ -2,63 +2,52 @@ import db from '../models/index';
 import CRUDService from '../services/CRUDService';
 
 let getHomePage = async (req, res) => {
-  try {
-    let data = await db.User.findAll();
-    return res.render("homepage.ejs", {
-      data: JSON.stringify(data),
-    });
-  } catch (e) {
-    console.log(e);
-  }
+    return res.render("homepage.ejs");
 };
 
-let getAboutPage = async (req, res) => {
-  return res.render("test/about.ejs");
+let createUser = (req, res) => {
+  return res.render("createUser.ejs");
 };
 
-let getCRUD = (req, res) => {
-  return res.render("crud.ejs");
-};
-
-let displayCRUD = async (req, res) => {
+let displayUser = async (req, res) => {
   let data = await CRUDService.getAllUser();
-  return res.render("displayCRUD.ejs", {
+  return res.render("displayUser.ejs", {
     data: data,
   });
 };
 
-let postCRUD = async (req, res) => {
+let postUser = async (req, res) => {
   let message = await CRUDService.createNewUser(req.body);
   console.log(req.body);
   console.log(message);
-  return res.send("Post crud from server");
+  return res.send("Create a new user successfully!");
 };
 
-let editCRUD = async (req, res) =>{
+let editUser = async (req, res) =>{
   let userId = req.query.id;
   if(userId){
     let userData = await CRUDService.getUserInfoById(userId);
     console.log("---------------------------------");
     console.log(userData);
     console.log("---------------------------------");
-    return res.render("editCRUD.ejs", {
+    return res.render("editUser.ejs", {
       data : userData,
     });
   }
   else{
-    return res.send("UserID not found");
+    return res.send("User not found");
   }
 };
 
-let putCRUD = async (req, res) =>{
+let postEditUser = async (req, res) =>{
   let userData = req.body;
   let allUsers = await CRUDService.updateUserData(userData);
-  return res.render("displayCRUD", {
+  return res.render("displayUser", {
     data : allUsers,
   })
 };
 
-let deleteCRUD = async (req, res) =>{
+let deleteUser = async (req, res) =>{
   let id = req.query.id;
   let data = await db.User.findAll();
   if(id){
@@ -74,11 +63,10 @@ let deleteCRUD = async (req, res) =>{
 
 module.exports = {
   getHomePage: getHomePage,
-  getAboutPage: getAboutPage,
-  getCRUD: getCRUD,
-  postCRUD: postCRUD,
-  displayCRUD: displayCRUD,
-  editCRUD: editCRUD,
-  putCRUD : putCRUD,
-  deleteCRUD: deleteCRUD,
+  createUser: createUser,
+  postUser: postUser,
+  displayUser: displayUser,
+  editUser: editUser,
+  postEditUser : postEditUser,
+  deleteUser: deleteUser,
 };
