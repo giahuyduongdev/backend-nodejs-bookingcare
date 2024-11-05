@@ -13,7 +13,6 @@ let handleUserLogin = (email, password) => {
         let user = await db.User.findOne({
           where: {email : email},
           attributes: ['email', 'roleId', 'password'],
-          raw: true
         })
         if(user){
           // compare password
@@ -45,13 +44,28 @@ let handleUserLogin = (email, password) => {
   }); 
 };
 
-
-let compareUserPassword = (userPassword) => {
+let getAllUsers = (userId) =>{
   return new Promise(async (resolve, reject) =>{
     try{
-
+      let users = '';
+        if(userId === 'ALL'){
+          users = await db.User.findAll({
+            attributes: {
+              exclude: ["password"],
+            }
+          });
+        }
+        if(userId && userId !== 'ALL'){
+          users = await db.User.findOne({
+            where: {id : userId},
+            attributes: {
+              exclude: ["password"],
+            }
+          })
+        }
+        resolve(users);
     }catch(e){
-      reject(e)
+      reject(e);
     }
   });
 };
@@ -76,4 +90,5 @@ let checkUserEmail = (userEmail) => {
 module.exports = {
   handleUserLogin: handleUserLogin,
   checkUserEmail: checkUserEmail,
+  getAllUsers: getAllUsers
 };
