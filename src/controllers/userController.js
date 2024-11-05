@@ -24,7 +24,7 @@ let handleLogin = async (req, res) => {
 };
 
 let handleGetAllUsers = async (req, res) =>{
-  let id = req.body.id; // ALL, id(get all orr get one user)
+  let id = req.query.id; // ALL, id(get all orr get one user)
   if(!id){
     return res.status(500).json({
       errCode: 1,
