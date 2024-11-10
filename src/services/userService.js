@@ -108,7 +108,7 @@ let createNewUser  = (data) =>{
       {
         resolve({
           errCode: 1,
-          message: 'Your email is already in used, Plz try another email'
+          errMessage: 'Your email is already in used, Plz try another email'
         });
       }else{
         let hashPasswordFromBcrypt = await hashUserPassword(data.password);
@@ -180,7 +180,7 @@ let updateUserData = (data) =>{
         await user.save();
         resolve({
           errCode: 0,
-          message: "Update the user succeed!"
+          errMessage: 'Your email is already in used, Plz try another email'
         });
       }
       else{
