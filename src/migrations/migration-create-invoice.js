@@ -1,7 +1,7 @@
 "use strict";
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("Doctor_clinic_specialty", {
+    await queryInterface.createTable("Invoices", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -10,12 +10,20 @@ module.exports = {
       },
       doctorId: {
         type: Sequelize.INTEGER,
+        allowNull: true,
       },
-      clinicId: {
+      patientId: {
         type: Sequelize.INTEGER,
+        allowNull: true,
       },
       specialtyId: {
         type: Sequelize.INTEGER,
+        allowNull: true,
+      },
+      totalCost: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
+        allowNull: true,
       },
       createdAt: {
         allowNull: false,
@@ -28,6 +36,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("Doctor_clinic_specialty");
+    await queryInterface.dropTable("Invoices");
   },
 };
