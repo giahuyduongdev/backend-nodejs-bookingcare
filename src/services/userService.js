@@ -12,7 +12,17 @@ let handleUserLogin = (email, password) => {
         //user already exits  
         let user = await db.User.findOne({
           where: {email : email},
-          attributes: ['email', 'roleId', 'password'],
+          attributes: [
+            'email',
+            'roleId',
+            'positionId',
+            'password',
+            "firstName",
+            "lastName",
+            "image",
+          ],
+          raw: true,
+          nest: true
         })
         if(user){
           // compare password
@@ -91,7 +101,6 @@ let hashUserPassword = (password) => {
   return new Promise(async (resolve, reject) => {
     try {
       let hashPassword = await bcrypt.hashSync(password, salt);
-      //  Hàm bcrypt.hashSync có thể là một hoạt động bất đồng bộ, nghĩa là nó có thể mất một thời gian để hoàn thành. Sử dụng Promise và async/await cho phép code tiếp tục thực hiện các tác vụ khác trong khi chờ đợi quá trình hash hoàn thành.
       resolve(hashPassword);
     } catch (e) {
       reject(e);
@@ -121,6 +130,7 @@ let createNewUser  = (data) =>{
           gender: data.gender == "1" ? true : false,
           roleId: data.roleId,
           phonenumber: data.phonenumber,
+          positionId: data.positionId,
         });
       }
       resolve({
@@ -177,10 +187,14 @@ let updateUserData = (data) =>{
         user.firstName = data.firstName;
         user.lastName = data.lastName;
         user.address = data.address;
+        user.roleId = data.roleId;
+        user.positionId = data.positionId;
+        user.gender = data.gender;
+        user.phonenumber = data.phonenumber;
         await user.save();
         resolve({
           errCode: 0,
-          errMessage: 'Your email is already in used, Plz try another email'
+          errMessage: 'Update the user succeed!'
         });
       }
       else{
@@ -195,6 +209,29 @@ let updateUserData = (data) =>{
   });
 };
 
+let getAllCodeService = (typeInput) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!typeInput) {
+        resolve({
+          errCode: 1,
+          errMessage: "Missing required parameters",
+        });
+      } else {
+        let res = {};
+        let allcode = await db.Allcode.findAll({
+          where: { type: typeInput },
+        });
+        res.errCode = 0;
+        res.data = allcode;
+        resolve(res);
+      }
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
   handleUserLogin: handleUserLogin,
   checkUserEmail: checkUserEmail,
@@ -202,5 +239,6 @@ module.exports = {
   createNewUser: createNewUser,
   hashUserPassword : hashUserPassword,
   deleteUser: deleteUser,
-  updateUserData: updateUserData
+  updateUserData: updateUserData,
+  getAllCodeService: getAllCodeService
 };

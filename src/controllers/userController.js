@@ -1,7 +1,7 @@
 import userService from "../services/userService";
 
 let handleLogin = async (req, res) => {
-  let email = req.body.email; // lấy giá trị người dùng gửi lên
+  let email = req.body.email;
   let password = req.body.password;
   if(!email || !password){
     return res.status(500).json({
@@ -11,11 +11,6 @@ let handleLogin = async (req, res) => {
   };
 
   let userData = await userService.handleUserLogin(email, password);
-
-  //check email exits
-  //compare password
-  //return userInfo
-  //access_token: JWT json webtoken
   return res.status(200).json({
     errCode: userData.errCode,
     message: userData.errMessage,
@@ -24,7 +19,7 @@ let handleLogin = async (req, res) => {
 };
 
 let handleGetAllUsers = async (req, res) =>{
-  let id = req.query.id; // ALL, id(get all orr get one user)
+  let id = req.query.id;
   if(!id){
     return res.status(500).json({
       errCode: 1,
@@ -73,10 +68,23 @@ let handleEditUser = async (req, res) =>{
   return res.status(200).json(message);
 }
 
+let getAllCode = async (req, res) => {
+  try {
+    let data = await userService.getAllCodeService(req.query.type);
+    return res.status(200).json(data);
+  } catch (e) {
+    return res.status(200).json({
+      errCode: -1,
+      errMessage: "Error from server",
+    });
+  }
+};
+
 module.exports = {
   handleLogin : handleLogin,
   handleGetAllUsers : handleGetAllUsers,
   handleCreateNewUser : handleCreateNewUser,
   handleEditUser : handleEditUser,
-  handleDeleteUser: handleDeleteUser
+  handleDeleteUser: handleDeleteUser,
+  getAllCode : getAllCode
 };
