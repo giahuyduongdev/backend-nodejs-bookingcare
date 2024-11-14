@@ -1,6 +1,9 @@
 import db from "../models/index";
 import bcrypt from "bcryptjs";
-var salt = bcrypt.genSaltSync(10);
+require("dotenv").config();
+import emailService from "./emailService";
+import { v4 as uuidv4 } from "uuid";
+const salt = bcrypt.genSaltSync(10);
 
 
 let handleUserLogin = (email, password) => {
@@ -245,6 +248,92 @@ let getAllCodeService = (typeInput) => {
   });
 };
 
+let buildUrlEmailForgotPassword = (tokenUser, email) => {
+  let result = `${process.env.URL_REACT}/retrieve-password?tokenUser=${tokenUser}&email=${email}`;
+
+  return result;
+};
+
+let postForgotPasswordService = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data.email) {
+        resolve({
+          errCode: 1,
+          errMessage: "Missing required parameter",
+        });
+      } else {
+        let tokenUser = uuidv4(); // ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d' -random
+        await emailService.sendForgotPasswordEmail({
+          receiverEmail: data.email,
+          redirectLink: buildUrlEmailForgotPassword(tokenUser, data.email),
+        });
+
+        //find user have in table Users-if have update tokenUser
+        let user = await db.User.findOne({
+          where: { email: data.email },
+          raw: false,
+        });
+        if (user) {
+          user.tokenUser = tokenUser;
+          await user.save();
+
+          resolve({
+            errCode: 0,
+            message: "Update the user and send Forgot Password email succeed!",
+          });
+        } else {
+          resolve({
+            errCode: 1,
+            errMessage: `User's not found!`,
+          });
+        }
+      }
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
+let postVerifyRetrievePasswordService = async (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data.tokenUser || !data.email || !data.newPassword) {
+        resolve({
+          errCode: 1,
+          errMessage: "Missing required parameter",
+        });
+      } else {
+        let hashPasswordFromBcrypt = await hashUserPassword(data.newPassword);
+
+        //find user have in table Users-if have update tokenUser
+        let user = await db.User.findOne({
+          where: { email: data.email, tokenUser: data.tokenUser },
+          raw: false,
+        });
+        if (user) {
+          user.password = hashPasswordFromBcrypt;
+          user.tokenUser = null;
+          await user.save();
+
+          resolve({
+            errCode: 0,
+            message: "Change user password succeed!",
+          });
+        } else {
+          resolve({
+            errCode: 2,
+            errMessage: `User's not found!`,
+          });
+        }
+      }
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
+
 module.exports = {
   handleUserLogin: handleUserLogin,
   checkUserEmail: checkUserEmail,
@@ -253,5 +342,7 @@ module.exports = {
   hashUserPassword : hashUserPassword,
   deleteUser: deleteUser,
   updateUserData: updateUserData,
-  getAllCodeService: getAllCodeService
+  getAllCodeService: getAllCodeService,
+  postForgotPasswordService: postForgotPasswordService,
+  postVerifyRetrievePasswordService: postVerifyRetrievePasswordService
 };
