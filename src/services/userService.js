@@ -109,6 +109,39 @@ let getAllUsers = (userId) => {
   });
 };
 
+let registerNewUser = async (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      //check email is exist
+      let check = await checkUserEmail(data.email);
+      if (check === true) {
+        resolve({
+          errCode: 1,
+          errMessage: "Your email is already in used, plz try another email!!",
+        });
+      } else {
+        let hashPasswordFromBcrypt = await hashUserPassword(data.password);
+        await db.User.create({
+          email: data.email,
+          password: hashPasswordFromBcrypt,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          address: data.address,
+          phonenumber: data.phonenumber,
+          gender: data.gender,
+          roleId: 'R3',
+        });
+        resolve({
+          errCode: 0,
+          message: "ok",
+        });
+      }
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 let createNewUser = async (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -338,6 +371,7 @@ module.exports = {
   handleUserLogin: handleUserLogin,
   checkUserEmail: checkUserEmail,
   getAllUsers: getAllUsers,
+  registerNewUser: registerNewUser,
   createNewUser: createNewUser,
   hashUserPassword : hashUserPassword,
   deleteUser: deleteUser,

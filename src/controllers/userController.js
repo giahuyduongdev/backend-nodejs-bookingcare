@@ -50,6 +50,24 @@ let handleCreateNewUser = async (req, res) => {
   return res.status(200).json(message);
 };
 
+let handleRegisterNewUser = async (req, res) => {
+  let email = req.body.email;
+  let password = req.body.password;
+  let firstName = req.body.firstName;
+  let lastName = req.body.lastName;
+  let address = req.body.lastName;
+  let gender = req.body.gender;
+  if(!email || !password || !firstName || !lastName || !address || !gender){
+    return res.status(500).json({
+      errCode: 1,
+      message: 'Missing inputs parameter!'
+    });
+  };
+
+  let message = await userService.registerNewUser(req.body);
+  return res.status(200).json(message);
+};
+
 let handleDeleteUser = async (req, res) =>{
   let id = req.body.id;
   if(!id){
@@ -109,6 +127,7 @@ let postVerifyRetrievePassword = async (req, res) => {
 module.exports = {
   handleLogin : handleLogin,
   handleGetAllUsers : handleGetAllUsers,
+  handleRegisterNewUser: handleRegisterNewUser,
   handleCreateNewUser : handleCreateNewUser,
   handleEditUser : handleEditUser,
   handleDeleteUser: handleDeleteUser,
