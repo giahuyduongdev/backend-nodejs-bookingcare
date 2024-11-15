@@ -1,8 +1,8 @@
 import db from "../models/index";
 require("dotenv").config();
 import _ from "lodash";
-// import emailService from "../services/emailService";
-// const textToImage = require("text-to-image");
+import emailService from "../services/emailService";
+const textToImage = require("text-to-image");
 
 const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
 
