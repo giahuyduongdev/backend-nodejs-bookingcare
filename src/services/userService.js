@@ -22,6 +22,7 @@ let handleUserLogin = (email, password) => {
             "firstName",
             "lastName",
             "image",
+            "tokenUser"
           ],
           include: [
             {
@@ -43,9 +44,12 @@ let handleUserLogin = (email, password) => {
           //compare password
           let check = await bcrypt.compareSync(password, user.password);
           if (check) {
+            let tokenUser = uuidv4();
+            await updateTokenUserData(user.id, tokenUser);
             userData.errCode = 0;
             userData.errMessage = "OK";
             delete user.password;
+            delete user.tokenUser;
             userData.user = user;
           } else {
             userData.errCode = 3;
@@ -65,6 +69,7 @@ let handleUserLogin = (email, password) => {
     }
   });
 };
+
 
 let checkUserEmail = (userEmail) => {
   return new Promise(async (resolve, reject) => {
@@ -214,6 +219,40 @@ let deleteUser = (userId) => {
     }
   });
 };
+
+let updateTokenUserData = (userId, tokenUser) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!userId) {
+        resolve({
+          errCode: 2,
+          errMessage: "Missing input parameter",
+        });
+      }
+      let user = await db.User.findOne({
+        where: { id: userId },
+        raw: false, 
+      });
+      if (user) {
+        user.tokenUser = tokenUser;
+        await user.save();
+
+        resolve({
+          errCode: 0,
+          message: "Update the token user succeed!",
+        });
+      } else {
+        resolve({
+          errCode: 1,
+          errMessage: `User's not found!`,
+        });
+      }
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 
 let updateUserData = (data) => {
   return new Promise(async (resolve, reject) => {
@@ -375,6 +414,7 @@ module.exports = {
   createNewUser: createNewUser,
   hashUserPassword : hashUserPassword,
   deleteUser: deleteUser,
+  updateTokenUserData: updateTokenUserData,
   updateUserData: updateUserData,
   getAllCodeService: getAllCodeService,
   postForgotPasswordService: postForgotPasswordService,
