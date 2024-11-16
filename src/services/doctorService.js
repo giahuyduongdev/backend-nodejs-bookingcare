@@ -180,22 +180,22 @@ let saveDetailInforDoctor = (inputData) => {
           doctorInfor.nameClinic = inputData.nameClinic;
           doctorInfor.addressClinic = inputData.addressClinic;
           doctorInfor.note = inputData.note;
-          // doctorInfor.specialtyId = inputData.specialtyId;
-          // doctorInfor.clinicId = inputData.clinicId;
+          doctorInfor.specialtyId = inputData.specialtyId;
+          doctorInfor.clinicId = inputData.clinicId;
 
           await doctorInfor.save();
         } else {
           //create
           await db.Doctor_Infor.create({
             doctorId: inputData.doctorId,
-            // priceId: inputData.selectedPrice,
-            // provinceId: inputData.selectedProvice,
-            // paymentId: inputData.selectedPayment,
+            priceId: inputData.selectedPrice,
+            provinceId: inputData.selectedProvice,
+            paymentId: inputData.selectedPayment,
             nameClinic: inputData.nameClinic,
             addressClinic: inputData.addressClinic,
             note: inputData.note,
-            // specialtyId: inputData.specialtyId,
-            // clinicId: inputData.clinicId,
+            specialtyId: inputData.specialtyId,
+            clinicId: inputData.clinicId,
           });
         }
         resolve({
