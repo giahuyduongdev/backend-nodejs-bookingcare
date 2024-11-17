@@ -35,12 +35,16 @@ let initWebRoutes = (app) => {
 
   router.get("/api/top-doctor-home", doctorController.getTopDoctorHome); // Lấy ra top doctor để hiển thị trang chủ
   router.get("/api/get-all-doctors", doctorController.getAllDoctors);
-  router.post("/api/save-infor-doctors", doctorController.postInforDoctor);
-  router.get("/api/get-detail-doctor-by-id",doctorController.getDetailDoctorById);
+  router.post("/api/save-infor-doctors", doctorController.postInforDoctor); // lưu thông tin của table doctor_info và mardowns trong quản lý thông tin bác sĩ của admin
+  router.get("/api/get-detail-doctor-by-id",doctorController.getDetailDoctorById); 
+  // lấy thông tin table doctor_infor, mardowns và all code trong trang quản lý thông tin bác sĩ của admin
+  router.get("/api/get-extra-infor-doctor-by-id",doctorController.getExtraInforDoctorById);
+  // lấy thông tin bác sĩ để hiển thị trên trang web khi nhấp vào xem chi tiết bên phía trang chủ
 
   router.get("/api/get-specialty", specialtyController.getAllSpecialty);
 
   router.get("/api/get-clinic", clinicController.getAllClinic);
+
 
   return app.use("/", router);
 };

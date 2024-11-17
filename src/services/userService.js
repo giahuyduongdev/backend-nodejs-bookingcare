@@ -220,6 +220,7 @@ let deleteUser = (userId) => {
   });
 };
 
+
 let updateTokenUserData = (userId, tokenUser) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -322,7 +323,7 @@ let getAllCodeService = (typeInput) => {
 
 let buildUrlEmailForgotPassword = (tokenUser, email) => {
   let result = `${process.env.URL_REACT}/retrieve-password?tokenUser=${tokenUser}&email=${email}`;
-
+  
   return result;
 };
 
@@ -418,5 +419,5 @@ module.exports = {
   updateUserData: updateUserData,
   getAllCodeService: getAllCodeService,
   postForgotPasswordService: postForgotPasswordService,
-  postVerifyRetrievePasswordService: postVerifyRetrievePasswordService
+  postVerifyRetrievePasswordService: postVerifyRetrievePasswordService,
 };

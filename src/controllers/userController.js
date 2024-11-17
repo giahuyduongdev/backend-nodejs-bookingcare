@@ -50,6 +50,7 @@ let handleCreateNewUser = async (req, res) => {
   return res.status(200).json(message);
 };
 
+
 let handleRegisterNewUser = async (req, res) => {
   let email = req.body.email;
   let password = req.body.password;
