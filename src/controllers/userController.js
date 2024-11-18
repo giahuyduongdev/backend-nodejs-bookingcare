@@ -52,19 +52,6 @@ let handleCreateNewUser = async (req, res) => {
 
 
 let handleRegisterNewUser = async (req, res) => {
-  let email = req.body.email;
-  let password = req.body.password;
-  let firstName = req.body.firstName;
-  let lastName = req.body.lastName;
-  let address = req.body.lastName;
-  let gender = req.body.gender;
-  if(!email || !password || !firstName || !lastName || !address || !gender){
-    return res.status(500).json({
-      errCode: 1,
-      message: 'Missing inputs parameter!'
-    });
-  };
-
   let message = await userService.registerNewUser(req.body);
   return res.status(200).json(message);
 };
@@ -112,9 +99,37 @@ let postForgotPassword = async (req, res) => {
   }
 };
 
+let postConFirmNewAccount = async (req, res) => {
+  try {
+    let infor = await userService.postCofirmAccountService(req.body);
+    return res.status(200).json(infor);
+  } catch (e) {
+    console.log(e);
+    return res.status(200).json({
+      errCode: -1,
+      errMessage: "Error from server",
+    });
+  }
+};
+
+
 let postVerifyRetrievePassword = async (req, res) => {
   try {
     let infor = await userService.postVerifyRetrievePasswordService(req.body);
+    return res.status(200).json(infor);
+  } catch (e) {
+    console.log(e);
+    return res.status(200).json({
+      errCode: -1,
+      errMessage: "Error from server",
+    });
+  }
+};
+
+
+let postConfirmEmailNewAccount = async (req, res) => {
+  try {
+    let infor = await userService.postConfirmNewAccountEmail(req.body);
     return res.status(200).json(infor);
   } catch (e) {
     console.log(e);
@@ -135,4 +150,6 @@ module.exports = {
   getAllCode : getAllCode,
   postForgotPassword: postForgotPassword,
   postVerifyRetrievePassword: postVerifyRetrievePassword,
+  postConFirmNewAccount: postConFirmNewAccount,
+  postConfirmEmailNewAccount: postConfirmEmailNewAccount
 };

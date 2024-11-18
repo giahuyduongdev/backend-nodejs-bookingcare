@@ -25,6 +25,8 @@ let initWebRoutes = (app) => {
     "/api/verify-retrieve-password",
     userController.postVerifyRetrievePassword
   );
+  router.post("/api/user-confirm-account", userController.postConFirmNewAccount);
+  router.post("/api/confirm-new-account", userController.postConfirmEmailNewAccount);
 
   router.get('/api/get-all-users', userController.handleGetAllUsers);
   router.post('/api/create-new-user', userController.handleCreateNewUser);

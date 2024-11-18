@@ -149,8 +149,45 @@ let getBodyHTMLEmailForgotPassword = (dataSend) => {
   return result;
 };
 
+let sendConfirmAccountEmail = async (dataSend) => {
+  // create reusable transporter object using the default SMTP transport
+  let transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+      user: process.env.EMAIL_APP, // generated ethereal user
+      pass: process.env.EMAIL_APP_PASSWORD, // generated ethereal password
+    },
+  });
+
+  // send mail with defined transport object
+  let info = await transporter.sendMail({
+    from: '"BookingCare" <notificationbookingcare@gmail.com>', // sender address
+    to: dataSend.receiverEmail, // list of receivers
+    subject: "Xác thực tài khoản", // Subject line
+    html: getBodyHTMLEmailConfirmNewAccount(dataSend),
+  });
+};
+
+let getBodyHTMLEmailConfirmNewAccount = (dataSend) => {
+  let result = "";
+  result = `
+<h3><b>Xin chào!</b></h3>
+<p>Bạn nhận được email này vì phải xác thực tài khoản sau khi đăng ký</p>
+
+<p>Vui lòng click vào đường link bên dưới để hoàn tất thủ đăng ký tài khoản.</p>
+<div><a href=${dataSend.redirectLink} target="_blank">Click here</a></div>
+
+<div>Nếu bạn không muốn xác thực tài khoản hãy bỏ qua email này!</div>
+<div>Xin chân thành cảm ơn!</div>
+`;
+  return result;
+};
+
 module.exports = {
   sendSimpleEmail: sendSimpleEmail,
   sendAttachment: sendAttachment,
   sendForgotPasswordEmail: sendForgotPasswordEmail,
+  sendConfirmAccountEmail : sendConfirmAccountEmail
 };

@@ -22,7 +22,8 @@ let handleUserLogin = (email, password) => {
             "firstName",
             "lastName",
             "image",
-            "tokenUser"
+            "tokenUser",
+            "authenticated"
           ],
           include: [
             {
@@ -41,6 +42,10 @@ let handleUserLogin = (email, password) => {
           nest: true,
         });
         if (user) {
+          if(user.authenticated === 'no'){
+          userData.errCode = 4;
+          userData.errMessage = `User's not authenticate `;
+          }
           //compare password
           let check = await bcrypt.compareSync(password, user.password);
           if (check) {
@@ -135,6 +140,7 @@ let registerNewUser = async (data) => {
           phonenumber: data.phonenumber,
           gender: data.gender,
           roleId: 'R3',
+          authenticated: 'no'
         });
         resolve({
           errCode: 0,
@@ -170,6 +176,7 @@ let createNewUser = async (data) => {
           roleId: data.roleId,
           positionId: data.positionId,
           image: data.avatar,
+          authenticated: 'yes'
         });
         resolve({
           errCode: 0,
@@ -323,8 +330,68 @@ let getAllCodeService = (typeInput) => {
 
 let buildUrlEmailForgotPassword = (tokenUser, email) => {
   let result = `${process.env.URL_REACT}/retrieve-password?tokenUser=${tokenUser}&email=${email}`;
-  
   return result;
+};
+
+let buildUrlEmailConfirmAccount = (tokenUser, email, password, firstName, lastName, address) => {
+  let result = `${process.env.URL_REACT}/confirm-new-account?tokenUser=${tokenUser}&email=${email}`;
+  return result;
+};
+
+
+let postCofirmAccountService = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data.email) {
+        resolve({
+          errCode: 1,
+          errMessage: "Missing required parameter",
+        });
+      } else {
+        let check = await checkUserEmail(data.email);
+        if (check === true) {
+          resolve({
+            errCode: 1,
+            errMessage: "Your email is already in used, plz try another email!!",
+          });
+        }
+        let tokenUser = uuidv4(); // ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d' -random
+        await emailService.sendConfirmAccountEmail({
+          receiverEmail: data.email,
+          redirectLink: buildUrlEmailConfirmAccount(tokenUser, data.email, data.password, data.firstName, data.lastName, data.address),
+        });
+        resolve({
+          errCode: 0,
+          message: "Send confirm new account email succeed",
+          tokenUser,
+          data
+        });
+      }
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
+let postConfirmNewAccountEmail = async (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data.tokenUser) {
+        resolve({
+          errCode: 1,
+          errMessage: "Missing required parameter",
+        });
+      } else {
+        await registerNewUser(data);
+        resolve({
+          errCode: 0,
+          message: "Register new accounts succeed!",
+        });
+      }
+    } catch (e) {
+      reject(e);
+    }
+  });
 };
 
 let postForgotPasswordService = (data) => {
@@ -420,4 +487,6 @@ module.exports = {
   getAllCodeService: getAllCodeService,
   postForgotPasswordService: postForgotPasswordService,
   postVerifyRetrievePasswordService: postVerifyRetrievePasswordService,
+  postCofirmAccountService: postCofirmAccountService,
+  postConfirmNewAccountEmail: postConfirmNewAccountEmail
 };
