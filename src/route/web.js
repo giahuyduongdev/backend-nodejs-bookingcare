@@ -42,9 +42,9 @@ let initWebRoutes = (app) => {
   router.get("/api/get-profile-doctor-by-id",doctorController.getProfileDoctorById);
   // lấy thông tin bác sĩ để hiển thị trên booking modal khi người dùng đặt lịch
 
-  // router.post("/api/create-new-specialty", specialtyController.createSpecialty);
+  router.post("/api/create-new-specialty", specialtyController.createSpecialty);
   router.get("/api/get-specialty", specialtyController.getAllSpecialty);
-  // router.get("/api/get-detail-specialty-by-id",specialtyController.getDetailSpecialtyById);
+  router.get("/api/get-detail-specialty-by-id",specialtyController.getDetailSpecialtyById);
 
   router.get("/api/get-clinic", clinicController.getAllClinic);
 
