@@ -98,6 +98,18 @@ let postForgotPassword = async (req, res) => {
     });
   }
 };
+let postVerifyRetrievePassword = async (req, res) => {
+  try {
+    let infor = await userService.postVerifyRetrievePasswordService(req.body);
+    return res.status(200).json(infor);
+  } catch (e) {
+    console.log(e);
+    return res.status(200).json({
+      errCode: -1,
+      errMessage: "Error from server",
+    });
+  }
+};
 
 let postConFirmNewAccount = async (req, res) => {
   try {
@@ -112,24 +124,9 @@ let postConFirmNewAccount = async (req, res) => {
   }
 };
 
-
-let postVerifyRetrievePassword = async (req, res) => {
+let postConfirmNewAccountEmail = async (req, res) => {
   try {
-    let infor = await userService.postVerifyRetrievePasswordService(req.body);
-    return res.status(200).json(infor);
-  } catch (e) {
-    console.log(e);
-    return res.status(200).json({
-      errCode: -1,
-      errMessage: "Error from server",
-    });
-  }
-};
-
-
-let postConfirmEmailNewAccount = async (req, res) => {
-  try {
-    let infor = await userService.postConfirmNewAccountEmail(req.body);
+    let infor = await userService.postConFirmNewAccountEmail(req.body);
     return res.status(200).json(infor);
   } catch (e) {
     console.log(e);
@@ -151,5 +148,5 @@ module.exports = {
   postForgotPassword: postForgotPassword,
   postVerifyRetrievePassword: postVerifyRetrievePassword,
   postConFirmNewAccount: postConFirmNewAccount,
-  postConfirmEmailNewAccount: postConfirmEmailNewAccount
+  postConfirmNewAccountEmail: postConfirmNewAccountEmail
 };

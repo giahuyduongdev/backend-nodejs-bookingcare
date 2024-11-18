@@ -23,7 +23,7 @@ let handleUserLogin = (email, password) => {
             "lastName",
             "image",
             "tokenUser",
-            "authenticated"
+            "authicated"
           ],
           include: [
             {
@@ -42,23 +42,25 @@ let handleUserLogin = (email, password) => {
           nest: true,
         });
         if (user) {
-          if(user.authenticated === 'no'){
+          if(user.authicated === 'no'){
           userData.errCode = 4;
-          userData.errMessage = `User's not authenticate `;
+          userData.errMessage = `User's not authenticated, plz authicate your account `;
           }
-          //compare password
-          let check = await bcrypt.compareSync(password, user.password);
-          if (check) {
-            let tokenUser = uuidv4();
-            await updateTokenUserData(user.id, tokenUser);
-            userData.errCode = 0;
-            userData.errMessage = "OK";
-            delete user.password;
-            delete user.tokenUser;
-            userData.user = user;
-          } else {
-            userData.errCode = 3;
-            userData.errMessage = "wrong password";
+          else{
+              //compare password
+            let check = await bcrypt.compareSync(password, user.password);
+            if (check) {
+              let tokenUser = uuidv4();
+              await updateTokenUserData(user.id, tokenUser);
+              userData.errCode = 0;
+              userData.errMessage = "OK";
+              delete user.password;
+              delete user.tokenUser;
+              userData.user = user;
+            } else {
+              userData.errCode = 3;
+              userData.errMessage = "wrong password";
+            }
           }
         } else {
           userData.errCode = 2;
@@ -140,7 +142,7 @@ let registerNewUser = async (data) => {
           phonenumber: data.phonenumber,
           gender: data.gender,
           roleId: 'R3',
-          authenticated: 'no'
+          authicated: 'no'
         });
         resolve({
           errCode: 0,
@@ -176,7 +178,7 @@ let createNewUser = async (data) => {
           roleId: data.roleId,
           positionId: data.positionId,
           image: data.avatar,
-          authenticated: 'yes'
+          authicated: 'yes'
         });
         resolve({
           errCode: 0,
@@ -333,7 +335,7 @@ let buildUrlEmailForgotPassword = (tokenUser, email) => {
   return result;
 };
 
-let buildUrlEmailConfirmAccount = (tokenUser, email, password, firstName, lastName, address) => {
+let buildUrlEmailConfirmAccount = (tokenUser, email, authicated) => {
   let result = `${process.env.URL_REACT}/confirm-new-account?tokenUser=${tokenUser}&email=${email}`;
   return result;
 };
@@ -348,24 +350,28 @@ let postCofirmAccountService = (data) => {
           errMessage: "Missing required parameter",
         });
       } else {
-        let check = await checkUserEmail(data.email);
-        if (check === true) {
-          resolve({
-            errCode: 1,
-            errMessage: "Your email is already in used, plz try another email!!",
-          });
-        }
         let tokenUser = uuidv4(); // ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d' -random
         await emailService.sendConfirmAccountEmail({
           receiverEmail: data.email,
-          redirectLink: buildUrlEmailConfirmAccount(tokenUser, data.email, data.password, data.firstName, data.lastName, data.address),
+          redirectLink: buildUrlEmailConfirmAccount(tokenUser, data.email),
         });
-        resolve({
-          errCode: 0,
-          message: "Send confirm new account email succeed",
-          tokenUser,
-          data
+
+        //find user have in table Users-if have update tokenUser
+        let user = await db.User.findOne({
+          where: { email: data.email },
+          raw: false,
         });
+        if (user) {
+          resolve({
+            errCode: 0,
+            message: "PLz check your email",
+          });
+        } else {
+          resolve({
+            errCode: 1,
+            errMessage: `User's not found!`,
+          });
+        }
       }
     } catch (e) {
       reject(e);
@@ -373,26 +379,40 @@ let postCofirmAccountService = (data) => {
   });
 };
 
-let postConfirmNewAccountEmail = async (data) => {
+let postConFirmNewAccountEmail = async (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (!data.tokenUser) {
+      if (!data.tokenUser || !data.email) {
         resolve({
           errCode: 1,
           errMessage: "Missing required parameter",
         });
       } else {
-        await registerNewUser(data);
-        resolve({
-          errCode: 0,
-          message: "Register new accounts succeed!",
+        let user = await db.User.findOne({
+          where: { email: data.email },
+          raw: false,
         });
+        if (user) {
+          user.authicated = 'yes';
+          await user.save();
+
+          resolve({
+            errCode: 0,
+            message: "Authicate your account succeed!",
+          });
+        } else {
+          resolve({
+            errCode: 2,
+            errMessage: `User's not found!`,
+          });
+        }
       }
     } catch (e) {
       reject(e);
     }
   });
 };
+
 
 let postForgotPasswordService = (data) => {
   return new Promise(async (resolve, reject) => {
@@ -488,5 +508,5 @@ module.exports = {
   postForgotPasswordService: postForgotPasswordService,
   postVerifyRetrievePasswordService: postVerifyRetrievePasswordService,
   postCofirmAccountService: postCofirmAccountService,
-  postConfirmNewAccountEmail: postConfirmNewAccountEmail
+  postConFirmNewAccountEmail: postConFirmNewAccountEmail
 };
