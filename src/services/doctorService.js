@@ -495,5 +495,7 @@ module.exports = {
   saveDetailInforDoctor : saveDetailInforDoctor,
   getDetailDoctorById : getDetailDoctorById,
   getExtraInforDoctorById: getExtraInforDoctorById,
-  getProfileDoctorById: getProfileDoctorById
+  getProfileDoctorById: getProfileDoctorById,
+  bulkCreateSchedule: bulkCreateSchedule,
+  getScheduleByDate: getScheduleByDate
 };
