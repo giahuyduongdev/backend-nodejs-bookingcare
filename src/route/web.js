@@ -38,15 +38,22 @@ let initWebRoutes = (app) => {
   router.get("/api/get-detail-doctor-by-id",doctorController.getDetailDoctorById); 
   // lấy thông tin table doctor_infor, mardowns và all code trong trang quản lý thông tin bác sĩ của admin
   router.get("/api/get-extra-infor-doctor-by-id",doctorController.getExtraInforDoctorById);
-  // lấy thông tin bác sĩ để hiển thị trên trang web khi nhấp vào xem chi tiết bên phía trang chủ
+  // lấy thông tin bác sĩ để hiển thị trên trang web khi nhấp vào xem chi tiết bên phía người dùng
   router.get("/api/get-profile-doctor-by-id",doctorController.getProfileDoctorById);
   // lấy thông tin bác sĩ để hiển thị trên booking modal khi người dùng đặt lịch
 
   router.post("/api/create-new-specialty", specialtyController.createSpecialty);
   router.get("/api/get-specialty", specialtyController.getAllSpecialty);
   router.get("/api/get-detail-specialty-by-id",specialtyController.getDetailSpecialtyById);
+  // lấy thông tin chuyên khoa để hiển thị trên trang web khi nhấp vào xem chi tiết bên phía người dùng
 
+  router.post("/api/create-new-clinic", clinicController.createClinic);
   router.get("/api/get-clinic", clinicController.getAllClinic);
+  router.get("/api/get-detail-clinic-by-id",clinicController.getDetailClinicById);
+  // lấy thông tin cơ sở y tế để hiển thị trên trang web khi nhấp vào xem chi tiết bên phía người dùng
+
+  router.post("/api/bulk-create-schedule", doctorController.bulkCreateSchedule);
+  router.get("/api/get-schedule-doctor-by-date",doctorController.getScheduleByDate);
 
 
   return app.use("/", router);
