@@ -109,12 +109,28 @@ let getScheduleByDate = async (req, res) => {
   }
 };
 
-let checkTimeScheduleByDate = async (req, res) => {
+// let checkTimeScheduleByDate = async (req, res) => {
+//   try {
+//     let infor = await doctorService.checkTimeScheduleByDate(
+//       req.query.doctorId,
+//       req.query.date,
+//       req.query.timeType
+//     );
+//     return res.status(200).json(infor);
+//   } catch (e) {
+//     console.log(e);
+//     return res.status(200).json({
+//       errCode: -1,
+//       errMessage: "Error from server",
+//     });
+//   }
+// };
+
+let getListPatientForDoctor = async (req, res) => {
   try {
-    let infor = await doctorService.checkTimeScheduleByDate(
+    let infor = await doctorService.getListPatientForDoctor(
       req.query.doctorId,
-      req.query.date,
-      req.query.timeType
+      req.query.date
     );
     return res.status(200).json(infor);
   } catch (e) {
@@ -125,6 +141,46 @@ let checkTimeScheduleByDate = async (req, res) => {
     });
   }
 };
+
+let sendRemedy = async (req, res) => {
+  try {
+    let infor = await doctorService.sendRemedy(req.body);
+    return res.status(200).json(infor);
+  } catch (e) {
+    console.log(e);
+    return res.status(200).json({
+      errCode: -1,
+      errMessage: "Error from server",
+    });
+  }
+};
+
+let createRemedy = async (req, res) => {
+  try {
+    let infor = await doctorService.createRemedy(req.body);
+    return res.status(200).json(infor);
+  } catch (e) {
+    console.log(e);
+    return res.status(200).json({
+      errCode: -1,
+      errMessage: "Error from server",
+    });
+  }
+};
+
+let cancelBooking = async (req, res) => {
+  try {
+    let infor = await doctorService.cancelBooking(req.body);
+    return res.status(200).json(infor);
+  } catch (e) {
+    console.log(e);
+    return res.status(200).json({
+      errCode: -1,
+      errMessage: "Error from server",
+    });
+  }
+};
+
 module.exports = {
   getTopDoctorHome: getTopDoctorHome,
   getAllDoctors: getAllDoctors,
@@ -134,5 +190,9 @@ module.exports = {
   getProfileDoctorById: getProfileDoctorById,
   bulkCreateSchedule : bulkCreateSchedule,
   getScheduleByDate : getScheduleByDate,
+  getListPatientForDoctor: getListPatientForDoctor,
+  sendRemedy: sendRemedy,
+  cancelBooking: cancelBooking,
+  createRemedy: createRemedy,
   // checkTimeScheduleByDate: checkTimeScheduleByDate
 };

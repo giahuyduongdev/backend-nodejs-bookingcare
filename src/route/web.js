@@ -57,9 +57,14 @@ let initWebRoutes = (app) => {
   router.get("/api/get-schedule-doctor-by-date",doctorController.getScheduleByDate);
   // router.get("/api/check-schedule-doctor-by-date",doctorController.checkTimeScheduleByDate);
 
-
   router.post("/api/patient-book-appointment",patientController.postBookAppointment);
+  // gửi email xác nhận lịch khám
   router.post("/api/verify-book-appointment",patientController.postVerifyBookAppointment);
+
+  router.get("/api/get-list-patient-for-doctor",doctorController.getListPatientForDoctor);
+  router.post("/api/send-remedy", doctorController.sendRemedy);
+  router.post("/api/create-remedy", doctorController.createRemedy);
+  router.post("/api/cancel-booking", doctorController.cancelBooking);
 
   return app.use("/", router);
 };

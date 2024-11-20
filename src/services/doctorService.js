@@ -489,30 +489,279 @@ let getScheduleByDate = (doctorId, date) => {
 };
 
 
-let checkTimeScheduleByDate = (doctorId, date, timeType) => {
+// let checkTimeScheduleByDate = (doctorId, date, timeType) => {
+//   return new Promise(async (resolve, reject) => {
+//     try {
+//       if (!doctorId || !date || !timeType) {
+//         resolve({
+//           errCode: 1,
+//           errMessage: "Missing required parameter",
+//         });
+//       } else {
+//         let dataSchedule = await db.Schedule.findOne({
+//           where: { doctorId: doctorId, date: date, timeType : timeType},
+//           raw: false,
+//           nest: true,
+//         });
+
+//         let check = 0;
+
+//         if (!dataSchedule){
+//             dataSchedule = [],
+//             check  = 1
+//           } 
+//         resolve({
+//           errCode: check,
+//           data: dataSchedule,
+//         });
+//       }
+//     } catch (e) {
+//       reject(e);
+//     }
+//   });
+// };
+
+let getListPatientForDoctor = (doctorId, date) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (!doctorId || !date || !timeType) {
+      if (!doctorId || !date) {
         resolve({
           errCode: 1,
           errMessage: "Missing required parameter",
         });
       } else {
-        let dataSchedule = await db.Schedule.findOne({
-          where: { doctorId: doctorId, date: date, timeType : timeType},
+        let data = await db.Booking.findAll({
+          where: { statusId: "S2", doctorId: doctorId, date: date },
+          include: [
+            {
+              model: db.User,
+              as: "patientData",
+              attributes: [
+                "email",
+                "firstName",
+                "address",
+                "gender",
+                "phonenumber",
+              ],
+              include: [
+                {
+                  model: db.Allcode,
+                  as: "genderData",
+                  attributes: ["valueEn", "valueVi"],
+                },
+              ],
+            },
+            {
+              model: db.Allcode,
+              as: "timeTypeDataPatient",
+              attributes: ["valueEn", "valueVi"],
+            },
+          ],
           raw: false,
           nest: true,
         });
 
-        let check = 0;
+        if (!data) {
+          data = {};
+        }
 
-        if (!dataSchedule){
-            dataSchedule = [],
-            check  = 1
-          } 
         resolve({
-          errCode: check,
-          data: dataSchedule,
+          errCode: 0,
+          data: data,
+        });
+      }
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
+let cancelBooking = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data.date || !data.doctorId || !data.patientId || !data.timeType) {
+        resolve({
+          errCode: 1,
+          errMessage: "Missing required parameter",
+        });
+      } else {
+        //update booking status
+        let appoinment = await db.Booking.findOne({
+          where: {
+            doctorId: data.doctorId,
+            patientId: data.patientId,
+            timeType: data.timeType,
+            date: data.date,
+            statusId: "S2",
+          },
+          raw: false,
+        });
+
+        if (appoinment) {
+          appoinment.statusId = "S4";
+          await appoinment.save();
+        }
+
+        resolve({
+          errCode: 0,
+          errMessage: "ok",
+        });
+      }
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
+let sendRemedy = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data.email || !data.doctorId || !data.patientId || !data.timeType) {
+        resolve({
+          errCode: 1,
+          errMessage: "Missing required parameter",
+        });
+      } else {
+        //update patient status
+        let appoinment = await db.Booking.findOne({
+          where: {
+            doctorId: data.doctorId,
+            patientId: data.patientId,
+            timeType: data.timeType,
+            statusId: "S2",
+          },
+          raw: false,
+        });
+
+        if (appoinment) {
+          appoinment.statusId = "S3";
+          await appoinment.save();
+        }
+
+        //send email remedy
+        await emailService.sendAttachment(data);
+
+        //create invoice table
+        await db.Invoice.create({
+          doctorId: data.doctorId,
+          patientId: data.patientId,
+          specialtyId: data.specialtyId,
+          totalCost: data.totalCost ? data.totalCost : 0,
+        });
+
+        //update to Revenue User table
+        let userTotalRevenue = await db.User.findOne({
+          where: { id: data.doctorId },
+          raw: false,
+        });
+
+        if (userTotalRevenue) {
+          userTotalRevenue.totalRevenue =
+            userTotalRevenue.totalRevenue + parseInt(data.totalCost);
+          await userTotalRevenue.save();
+        }
+
+        //update to totalCost User table
+        let userTotalCost = await db.User.findOne({
+          where: { id: data.patientId },
+          raw: false,
+        });
+        if (userTotalCost) {
+          userTotalCost.totalCost =
+            userTotalCost.totalCost + parseInt(data.totalCost);
+          await userTotalCost.save();
+        }
+
+        resolve({
+          errCode: 0,
+          errMessage: "ok",
+        });
+      }
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
+let createRemedy = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (
+        !data.doctorId ||
+        !data.patientId ||
+        !data.timeType ||
+        !data.date ||
+        !data.token ||
+        !data.patientName ||
+        !data.email ||
+        !data.listMedicine ||
+        !data.desciption
+      ) {
+        resolve({
+          errCode: 1,
+          errMessage: "Missing required parameter",
+        });
+      } else {
+        //create image remedy
+        //get today
+        let today = new Date();
+        let dd = String(today.getDate()).padStart(2, "0");
+        let mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+        let yyyy = today.getFullYear();
+
+        today = mm + "/" + dd + "/" + yyyy;
+        let contentImageVi = `
+        Thông tin đơn thuốc ngày ${today}
+        Bác sĩ phụ trách: ${data.doctorName}
+
+        Bệnh nhân ${data.patientName}
+        Email: ${data.email}
+
+        Danh sách các thuốc:
+        ${data.listMedicine}
+
+        Thông tin mô tả cách sử dụng:
+        ${data.desciption}
+        `;
+        const dataUriBase64 = textToImage.generateSync(contentImageVi, {
+          debug: false,
+          maxWidth: parseInt("720"),
+          fontSize: parseInt("30"),
+          fontFamily: "Arial",
+          lineHeight: parseInt("50"),
+          margin: 10,
+          bgColor: "#ffffff",
+          textColor: "#000000",
+        });
+
+        //update patient status
+        let appoinment = await db.Booking.findOne({
+          where: {
+            doctorId: data.doctorId,
+            patientId: data.patientId,
+            timeType: data.timeType,
+            date: data.date,
+            token: data.token,
+          },
+          raw: false,
+        });
+
+        if (appoinment) {
+          appoinment.imageRemedy = dataUriBase64;
+          await appoinment.save();
+        }
+
+        //create row histories table
+        await db.History.create({
+          doctorId: data.doctorId,
+          patientId: data.patientId,
+          description: data.desciption,
+          files: dataUriBase64,
+        });
+
+        resolve({
+          errCode: 0,
+          errMessage: "ok",
         });
       }
     } catch (e) {
@@ -531,5 +780,9 @@ module.exports = {
   getProfileDoctorById: getProfileDoctorById,
   bulkCreateSchedule: bulkCreateSchedule,
   getScheduleByDate: getScheduleByDate,
+  getListPatientForDoctor: getListPatientForDoctor,
+  sendRemedy: sendRemedy,
+  cancelBooking: cancelBooking,
+  createRemedy: createRemedy,
   // checkTimeScheduleByDate: checkTimeScheduleByDate
 };
