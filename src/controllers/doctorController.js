@@ -108,6 +108,23 @@ let getScheduleByDate = async (req, res) => {
     });
   }
 };
+
+let checkTimeScheduleByDate = async (req, res) => {
+  try {
+    let infor = await doctorService.checkTimeScheduleByDate(
+      req.query.doctorId,
+      req.query.date,
+      req.query.timeType
+    );
+    return res.status(200).json(infor);
+  } catch (e) {
+    console.log(e);
+    return res.status(200).json({
+      errCode: -1,
+      errMessage: "Error from server",
+    });
+  }
+};
 module.exports = {
   getTopDoctorHome: getTopDoctorHome,
   getAllDoctors: getAllDoctors,
@@ -116,5 +133,6 @@ module.exports = {
   getExtraInforDoctorById: getExtraInforDoctorById,
   getProfileDoctorById: getProfileDoctorById,
   bulkCreateSchedule : bulkCreateSchedule,
-  getScheduleByDate : getScheduleByDate
+  getScheduleByDate : getScheduleByDate,
+  // checkTimeScheduleByDate: checkTimeScheduleByDate
 };

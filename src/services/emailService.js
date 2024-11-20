@@ -27,10 +27,10 @@ let getBodyHTMLEmail = (dataSend) => {
   if (dataSend.language === "vi") {
     result = `
 <h3><b>Xin chào ${dataSend.patientName}!</b></h3>
-<p>Bạn nhận được email này vì đã đặt lịch khám bệnh online trên mywebsite</p>
+<p>Bạn nhận được email này vì đã đặt lịch khám bệnh online trên BookingCare</p>
 <p>Thông tin đặt lịch khám bệnh:</p>
 <div><b>Thời gian: ${dataSend.time}</b></div>
-<div><b>Bác sĩ: ${dataSend.doctorName}</b></div>
+<div><b>Bác sĩ khám: ${dataSend.doctorName}</b></div>
 
 <p>Nếu các thông tin trên là đúng sự thật, vui lòng click vào đường link bên dưới để hoàn tất thủ tục đặt lịch khám bệnh.</p>
 <div><a href=${dataSend.redirectLink} target="_blank">Click here</a></div>
@@ -41,7 +41,7 @@ let getBodyHTMLEmail = (dataSend) => {
   if (dataSend.language === "en") {
     result = `
     <h3><b>Dear ${dataSend.patientName}!</b></h3>
-    <p>You received this email because you booked an online medical appointment on mywebsite</p>
+    <p>You received this email because you booked an online medical appointment on BookingCare</p>
     <p>Information to schedule an appointment:</p>
     <div><b>Time: ${dataSend.time}</b></div>
     <div><b>Doctor: ${dataSend.doctorName}</b></div>

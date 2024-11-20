@@ -488,6 +488,39 @@ let getScheduleByDate = (doctorId, date) => {
   });
 };
 
+
+let checkTimeScheduleByDate = (doctorId, date, timeType) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!doctorId || !date || !timeType) {
+        resolve({
+          errCode: 1,
+          errMessage: "Missing required parameter",
+        });
+      } else {
+        let dataSchedule = await db.Schedule.findOne({
+          where: { doctorId: doctorId, date: date, timeType : timeType},
+          raw: false,
+          nest: true,
+        });
+
+        let check = 0;
+
+        if (!dataSchedule){
+            dataSchedule = [],
+            check  = 1
+          } 
+        resolve({
+          errCode: check,
+          data: dataSchedule,
+        });
+      }
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
   getTopDoctorHome: getTopDoctorHome,
   getAllDoctors: getAllDoctors,
@@ -497,5 +530,6 @@ module.exports = {
   getExtraInforDoctorById: getExtraInforDoctorById,
   getProfileDoctorById: getProfileDoctorById,
   bulkCreateSchedule: bulkCreateSchedule,
-  getScheduleByDate: getScheduleByDate
+  getScheduleByDate: getScheduleByDate,
+  // checkTimeScheduleByDate: checkTimeScheduleByDate
 };
