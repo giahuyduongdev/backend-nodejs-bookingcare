@@ -335,7 +335,7 @@ let buildUrlEmailForgotPassword = (tokenUser, email) => {
   return result;
 };
 
-let buildUrlEmailConfirmAccount = (tokenUser, email, authicated) => {
+let buildUrlEmailConfirmAccount = (tokenUser, email) => {
   let result = `${process.env.URL_REACT}/confirm-new-account?tokenUser=${tokenUser}&email=${email}`;
   return result;
 };
@@ -353,6 +353,7 @@ let postCofirmAccountService = (data) => {
         let tokenUser = uuidv4(); // ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d' -random
         await emailService.sendConfirmAccountEmail({
           receiverEmail: data.email,
+          language: data.language,
           redirectLink: buildUrlEmailConfirmAccount(tokenUser, data.email),
         });
 
@@ -362,6 +363,8 @@ let postCofirmAccountService = (data) => {
           raw: false,
         });
         if (user) {
+          user.tokenUser = tokenUser;
+          user.save();
           resolve({
             errCode: 0,
             message: "PLz check your email",
@@ -389,7 +392,7 @@ let postConFirmNewAccountEmail = async (data) => {
         });
       } else {
         let user = await db.User.findOne({
-          where: { email: data.email },
+          where: { email: data.email, tokenUser: data.tokenUser },
           raw: false,
         });
         if (user) {
@@ -403,7 +406,7 @@ let postConFirmNewAccountEmail = async (data) => {
         } else {
           resolve({
             errCode: 2,
-            errMessage: `User's not found!`,
+            errMessage: `Account user has been activated or does not exist!!`,
           });
         }
       }

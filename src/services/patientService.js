@@ -83,7 +83,7 @@ let postBookAppointment = (data) => {
   });
 };
 
-let postVerifyBookAppointment = (data) => {
+let postVerifyBookAppointment =  (data) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (!data.token || !data.doctorId) {
