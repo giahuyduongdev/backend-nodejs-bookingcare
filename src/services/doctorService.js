@@ -457,7 +457,7 @@ let getScheduleByDate = (doctorId, date) => {
         });
       } else {
         let dataSchedule = await db.Schedule.findAll({
-          where: { doctorId: doctorId, date: date },
+          where: { doctorId: doctorId, date: date},
           include: [
             {
               model: db.Allcode,
@@ -477,6 +477,24 @@ let getScheduleByDate = (doctorId, date) => {
         if (!dataSchedule) {
           dataSchedule = [];
         }
+        // let now = new Date().getHours();
+        // let value = '';
+        // for (var i = dataSchedule.length - 1; i >= 0; i--) {
+        //   if(dataSchedule[i].timeTypeData.valueVi[2] === ':'){
+        //     value = dataSchedule[i].timeTypeData.valueVi.slice(0,2);
+        //   }
+        //   else{
+        //     value = dataSchedule[i].timeTypeData.valueVi[0]
+        //   }
+          
+        //   if(now > value || new Date() < ){
+        //     dataSchedule.splice(i, 1);
+        //   }
+
+        //   // if(dataSchedule[i].id > 20){
+        //   //   dataSchedule.splice(i, 1);
+        //   // }
+        // }
         resolve({
           errCode: 0,
           data: dataSchedule,
