@@ -19,7 +19,9 @@ let postBookAppointment = (data) => {
         !data.date ||
         !data.fullName ||
         !data.selectedGender ||
-        !data.address
+        !data.address ||
+        !data.phonenumber ||
+        !data.birthday
       ) {
         resolve({
           errCode: 1,
@@ -45,8 +47,11 @@ let postBookAppointment = (data) => {
             gender: data.selectedGender,
             address: data.address,
             firstName: data.fullName,
+            phonenumber: data.phonenumber,
+            birthday: data.birthday
           },
         });
+
 
         //create a booking record
         if (user && user[0]) {
@@ -55,9 +60,18 @@ let postBookAppointment = (data) => {
             doctorId: data.doctorId,
             patientId: user[0].id,
             date: data.date,
-            timeType: data.timeType,
+            timeType: data.timeType, 
             token: token,
           });
+        }
+
+        let user1 = await db.User.findOne({
+          where: { email: data.email },
+          raw: false, 
+        });
+        if(user1){
+          user1.birthday = data.birthday;
+          await user1.save()
         }
         // if (user && user[0]) {
         //   await db.Booking.findOrCreate({

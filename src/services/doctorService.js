@@ -558,9 +558,11 @@ let getListPatientForDoctor = (doctorId, date) => {
               attributes: [
                 "email",
                 "firstName",
+                "lastName",
                 "address",
                 "gender",
                 "phonenumber",
+                "birthday"
               ],
               include: [
                 {
