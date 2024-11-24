@@ -140,6 +140,7 @@ let registerNewUser = async (data) => {
           lastName: data.lastName,
           address: data.address,
           phonenumber: data.phonenumber,
+          birthday: data.birthday,
           gender: data.gender,
           roleId: 'R3',
           authicated: 'no'
@@ -147,6 +148,7 @@ let registerNewUser = async (data) => {
         resolve({
           errCode: 0,
           message: "ok",
+          data: data
         });
       }
     } catch (e) {
