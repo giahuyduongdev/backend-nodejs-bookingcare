@@ -181,6 +181,19 @@ let cancelBooking = async (req, res) => {
   }
 };
 
+let cancelBookingEmail = async (req, res) => {
+  try {
+    let infor = await doctorService.cancelBookingEmail(req.body);
+    return res.status(200).json(infor);
+  } catch (e) {
+    console.log(e);
+    return res.status(200).json({
+      errCode: -1,
+      errMessage: "Error from server",
+    });
+  }
+};
+
 module.exports = {
   getTopDoctorHome: getTopDoctorHome,
   getAllDoctors: getAllDoctors,
@@ -193,6 +206,7 @@ module.exports = {
   getListPatientForDoctor: getListPatientForDoctor,
   sendRemedy: sendRemedy,
   cancelBooking: cancelBooking,
+  cancelBookingEmail: cancelBookingEmail,
   createRemedy: createRemedy,
   // checkTimeScheduleByDate: checkTimeScheduleByDate
 };

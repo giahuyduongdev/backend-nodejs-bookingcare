@@ -84,6 +84,7 @@ let initWebRoutes = (app) => {
   // Xác nhận lịch khám
   router.post("/api/cancel-booking", doctorController.cancelBooking);
   // Bác sĩ hủy lịch khám
+  router.post("/api/cancel-booking-email", doctorController.cancelBookingEmail);
 
   router.get("/api/get-list-patient-for-doctor",doctorController.getListPatientForDoctor);
   // Lấy danh sách bệnh nhân của bác sĩ

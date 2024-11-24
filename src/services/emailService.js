@@ -185,9 +185,51 @@ let getBodyHTMLEmailConfirmNewAccount = (dataSend) => {
   return result;
 };
 
+
+let sendCancelBookingEmail = async (dataSend) => {
+  // create reusable transporter object using the default SMTP transport
+  let transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+      user: process.env.EMAIL_APP, // generated ethereal user
+      pass: process.env.EMAIL_APP_PASSWORD, // generated ethereal password
+    },
+  });
+
+  // send mail with defined transport object
+  let info = await transporter.sendMail({
+    from: '"BookingCare" <notificationbookingcare@gmail.com>', // sender address
+    to: dataSend.receiverEmail, // list of receivers
+    subject: "Hủy lịch khám bệnh", // Subject line
+    html: getBodyHTMLEmailCancelBooking(dataSend),
+  });
+};
+
+let getBodyHTMLEmailCancelBooking = (dataSend) => {
+  let result = "";
+  result = `
+<h3><b>Xin chào!</b></h3>
+<p>Bạn nhận được email này vì lịch hẹn của bạn đã bị hủy </p>
+<p>Chi tiết lịch hẹn đã bị hủy </p>
+<p>Thời gian: ngày ${dataSend.date} tháng ${dataSend.month} năm ${dataSend.year} </p>
+<p>Giờ: ${dataSend.time} </p>
+<p> Bác sĩ: ${dataSend.doctorName} </p>
+<p>Lý do hủy: ${dataSend.note} </p>
+
+<p>Chúng tôi xin lỗi vì sự bất tiện này.</p>
+
+<div>Bạn có thể đặt lịch khác trên hệ thống!</div>
+<div>Xin chân thành cảm ơn!</div>
+`;
+  return result;
+};
+
 module.exports = {
   sendSimpleEmail: sendSimpleEmail,
   sendAttachment: sendAttachment,
   sendForgotPasswordEmail: sendForgotPasswordEmail,
-  sendConfirmAccountEmail : sendConfirmAccountEmail
+  sendConfirmAccountEmail : sendConfirmAccountEmail,
+  sendCancelBookingEmail: sendCancelBookingEmail
 };

@@ -2,6 +2,7 @@ import db from "../models/index";
 require("dotenv").config();
 import _ from "lodash";
 import emailService from "../services/emailService";
+import { where } from "sequelize";
 const textToImage = require("text-to-image");
 
 const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
@@ -549,7 +550,7 @@ let getListPatientForDoctor = (doctorId, date) => {
         });
       } else {
         let data = await db.Booking.findAll({
-          where: { statusId: "S2", doctorId: doctorId, date: date },
+          where: {doctorId: doctorId, date: date },
           include: [
             {
               model: db.User,
@@ -582,10 +583,9 @@ let getListPatientForDoctor = (doctorId, date) => {
         if (!data) {
           data = {};
         }
-
         resolve({
           errCode: 0,
-          data: data,
+          data: data
         });
       }
     } catch (e) {
@@ -623,6 +623,74 @@ let cancelBooking = (data) => {
         resolve({
           errCode: 0,
           errMessage: "ok",
+        });
+      }
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
+let cancelBookingEmail = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data.date || !data.doctorId || !data.patientId || !data.timeType || !data.note || !data.date || !data.dateString || !data.month || !data.year || !data.time) {
+        resolve({
+          errCode: 1,
+          errMessage: "Missing required parameter",
+        });
+      } else {
+        //update booking status
+        let appoinment = await db.Booking.findOne({
+          where: {
+            doctorId: data.doctorId,
+            patientId: data.patientId,
+            timeType: data.timeType,
+            date: data.date,
+            statusId: "S2",
+          },
+          include :[
+            {
+              model: db.User,
+              as: "patientData",
+              attributes: ["id", "email"],
+            },
+          ],
+          raw: false,
+          nest: true,
+        });
+       
+
+        if (appoinment) {
+          appoinment.note = data.note;
+          appoinment.statusId = "S4";
+          await appoinment.save();
+        }
+
+        let doctorInfo = await db.User.findOne({
+          where: {
+            id : data.doctorId,
+          },
+          raw: false,
+          nest: true,
+        })
+
+
+        await emailService.sendCancelBookingEmail({
+          receiverEmail: appoinment.patientData.email,
+          note: appoinment.note,
+          date: data.dateString,
+          month: data.month,
+          year: data.year,
+          time: data.time,
+          doctorName: doctorInfo.lastName +' '+ doctorInfo.firstName,
+        })
+
+        let day = new Date(data.date).toString();
+        resolve({
+          errCode: 0,
+          errMessage: "ok",
+          data: appoinment,
         });
       }
     } catch (e) {
@@ -801,6 +869,7 @@ module.exports = {
   getListPatientForDoctor: getListPatientForDoctor,
   sendRemedy: sendRemedy,
   cancelBooking: cancelBooking,
+  cancelBookingEmail: cancelBookingEmail,
   createRemedy: createRemedy,
   // checkTimeScheduleByDate: checkTimeScheduleByDate
 };
