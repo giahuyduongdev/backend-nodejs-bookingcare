@@ -30,6 +30,8 @@ let initWebRoutes = (app) => {
   // Đổi mật khẩu khi nhấp vào link quên mật khẩu
   router.post("/api/user-confirm-account", userController.postConFirmNewAccount);
   // Gửi email xác nhận tài khoản sau khi đã đăng ký
+  router.get("/api/get-user-profile", userController.getUserInfoProfile);
+  // Lấy thông tin để hiển thị hồ sơ
   router.post("/api/user-confirm-account-email", userController.postConfirmNewAccountEmail);
   // Xác nhận email vừa mới đăng ký
 

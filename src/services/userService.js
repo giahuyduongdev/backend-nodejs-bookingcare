@@ -309,6 +309,25 @@ let updateUserData = (data) => {
   });
 };
 
+let getUserInfoProfile = (userEmail) =>{
+  return new Promise (async(resolve,reject) =>{
+    try{
+        let users = await db.User.findOne({
+          where: { email: userEmail},
+          attributes: {
+            exclude: ["password", "tokenUser"],
+          },
+          raw: true,
+          nest: true,
+        });
+        resolve(users);
+    }catch(e){
+      reject(e);
+    }
+  });
+
+}
+
 let getAllCodeService = (typeInput) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -399,6 +418,7 @@ let postConFirmNewAccountEmail = async (data) => {
         });
         if (user) {
           user.authicated = 'yes';
+          user.tokenUser = null;
           await user.save();
 
           resolve({
@@ -513,5 +533,6 @@ module.exports = {
   postForgotPasswordService: postForgotPasswordService,
   postVerifyRetrievePasswordService: postVerifyRetrievePasswordService,
   postCofirmAccountService: postCofirmAccountService,
-  postConFirmNewAccountEmail: postConFirmNewAccountEmail
+  postConFirmNewAccountEmail: postConFirmNewAccountEmail,
+  getUserInfoProfile: getUserInfoProfile
 };

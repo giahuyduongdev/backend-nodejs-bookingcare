@@ -137,6 +137,33 @@ let postConfirmNewAccountEmail = async (req, res) => {
   }
 };
 
+let getUserInfoProfile = async(req, res) =>{
+  let email = req.query.email;
+  if(!email){
+    return res.status(500).json({
+      errCode: 1,
+      errMessage: 'Missing required parameters',
+      users: [],
+    })
+  }
+  let users = await userService.getUserInfoProfile(email)
+  if(users){
+    console.log(users);
+    return res.status(200).json({
+      errCode: 0,
+      errMessage: 'OK',
+      users,
+    });
+  }else
+  {
+    return res.status(200).json({
+      errCode: 2,
+      errMessage: 'User not found',
+      users: [],
+    });
+  }
+};
+
 module.exports = {
   handleLogin : handleLogin,
   handleGetAllUsers : handleGetAllUsers,
@@ -148,5 +175,6 @@ module.exports = {
   postForgotPassword: postForgotPassword,
   postVerifyRetrievePassword: postVerifyRetrievePassword,
   postConFirmNewAccount: postConFirmNewAccount,
-  postConfirmNewAccountEmail: postConfirmNewAccountEmail
+  postConfirmNewAccountEmail: postConfirmNewAccountEmail,
+  getUserInfoProfile: getUserInfoProfile
 };
