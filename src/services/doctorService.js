@@ -779,7 +779,7 @@ let createRemedy = (data) => {
         !data.patientId ||
         !data.timeType ||
         !data.date ||
-        !data.token ||
+        // !data.token ||
         !data.patientName ||
         !data.email ||
         !data.listMedicine ||
@@ -829,7 +829,7 @@ let createRemedy = (data) => {
             patientId: data.patientId,
             timeType: data.timeType,
             date: data.date,
-            token: data.token,
+            // token: data.token,
           },
           raw: false,
         });
