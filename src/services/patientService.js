@@ -40,7 +40,7 @@ let postBookAppointment = (data) => {
       ) {
         resolve({
           errCode: 1,
-          errMessage: "Missing required parameter",
+          errMessage: "Thiếu dữ liệu đầu vào",
         });
       } else {
         let token = uuidv4(); // ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'
@@ -141,7 +141,7 @@ let postVerifyBookAppointment =  (data) => {
       if (!data.token || !data.doctorId) {
         resolve({
           errCode: 1,
-          errMessage: "Missing required parameter",
+          errMessage: "Thiếu dữ liệu đầu vào",
         });
       } else {
         let appointment = await db.Booking.findOne({
@@ -176,7 +176,7 @@ let getListAppointmentForPatient = (patientId, date) =>{
       if(!patientId || !date){
         resolve({
           errCode: 1,
-          errMessage: "Missing required parameter",
+          errMessage: "Thiếu dữ liệu đầu vào",
         });
       }
       else{

@@ -20,7 +20,7 @@ let postUser = async (req, res) => {
   let message = await CRUDService.createNewUser(req.body);
   console.log(req.body);
   console.log(message);
-  return res.send("Create a new user successfully!");
+  return res.send("Thêm người dùng mới thành công");
 };
 
 let editUser = async (req, res) =>{
@@ -56,7 +56,7 @@ let deleteUser = async (req, res) =>{
   }
   else
   {
-    res.send("User not found");
+    res.send("Người dùng không tồn tại");
   }
 };
 

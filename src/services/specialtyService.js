@@ -10,7 +10,7 @@ let createSpecialty = (data) => {
       ) {
         resolve({
           errCode: 1,
-          errMessage: "Missing required parameter",
+          errMessage: "Thiếu dữ liệu đầu vào",
         });
       } else {
         await db.Specialty.create({
@@ -61,7 +61,7 @@ let getDetailSpecialtyById = (inputId, location) => {
       if (!inputId || !location) {
         resolve({
           errCode: 1,
-          errMessage: "Missing required parameter",
+          errMessage: "Thiếu dữ liệu đầu vào",
         });
       } else {
         let data = await db.Specialty.findOne({

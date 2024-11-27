@@ -12,7 +12,7 @@ let createClinic = (data) => {
       ) {
         resolve({
           errCode: 1,
-          errMessage: "Missing required parameter",
+          errMessage: "Thiếu dữ liệu đầu vào",
         });
       } else {
         await db.Clinic.create({
@@ -64,7 +64,7 @@ let getDetailClinicById = (inputId) => {
       if (!inputId) {
         resolve({
           errCode: 1,
-          errMessage: "Missing required parameter",
+          errMessage: "Thiếu dữ liệu đầu vào",
         });
       } else {
         let data = await db.Clinic.findOne({

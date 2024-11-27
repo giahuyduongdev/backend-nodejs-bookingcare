@@ -8,7 +8,7 @@ let getWeeklyRevenue = async (req, res) => {
     console.log(e);
     return res.status(200).json({
       errCode: -1,
-      errMessage: "Error from server",
+      errMessage: "Lỗi",
     });
   }
 };
@@ -21,7 +21,7 @@ let getTotalNewUserDay = async (req, res) => {
     console.log(e);
     return res.status(200).json({
       errCode: -1,
-      errMessage: "Error from server",
+      errMessage: "Lỗi",
     });
   }
 };
@@ -34,7 +34,7 @@ let getTotalHealthAppointmentDone = async (req, res) => {
     console.log(e);
     return res.status(200).json({
       errCode: -1,
-      errMessage: "Error from server",
+      errMessage: "Lỗi",
     });
   }
 };
@@ -47,7 +47,7 @@ let getTotalDoctor = async (req, res) => {
     console.log(e);
     return res.status(200).json({
       errCode: -1,
-      errMessage: "Error from server",
+      errMessage: "Lỗi",
     });
   }
 };
@@ -60,7 +60,7 @@ let getTopThreeDoctorsOfTheYear = async (req, res) => {
     console.log(e);
     return res.status(200).json({
       errCode: -1,
-      errMessage: "Error from server",
+      errMessage: "Lỗi",
     });
   }
 };
@@ -73,7 +73,7 @@ let getTopFourVipPatient = async (req, res) => {
     console.log(e);
     return res.status(200).json({
       errCode: -1,
-      errMessage: "Error from server",
+      errMessage: "Lỗi",
     });
   }
 };
@@ -86,7 +86,7 @@ let getMonthlyRevenueSpecialty = async (req, res) => {
     console.log(e);
     return res.status(200).json({
       errCode: -1,
-      errMessage: "Error from server",
+      errMessage: "Lỗi",
     });
   }
 };

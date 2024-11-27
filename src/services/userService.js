@@ -44,7 +44,7 @@ let handleUserLogin = (email, password) => {
         if (user) {
           if(user.authicated === 'no'){
           userData.errCode = 4;
-          userData.errMessage = `User's not authenticated, plz authicate your account `;
+          userData.errMessage = `Tài khoản chưa được xác thực, vui lòng xác thực tài khoản`;
           }
           else{
               //compare password
@@ -59,16 +59,16 @@ let handleUserLogin = (email, password) => {
               userData.user = user;
             } else {
               userData.errCode = 3;
-              userData.errMessage = "wrong password";
+              userData.errMessage = "Sai mật khẩu";
             }
           }
         } else {
           userData.errCode = 2;
-          userData.errMessage = `User's not found`;
+          userData.errMessage = `Không tìm thấy người dùng`;
         }
       } else {
         userData.errCode = 1;
-        userData.errMessage = `Your's Email isn't exist in your system. Plz try other email`;
+        userData.errMessage = `Email không tồn tại trong hệ thóng, vui lòng thử lại`;
       }
       resolve(userData);
     } catch (e) {
@@ -129,7 +129,7 @@ let registerNewUser = async (data) => {
       if (check === true) {
         resolve({
           errCode: 1,
-          errMessage: "Your email is already in used, plz try another email!!",
+          errMessage: "Email đã được sử dụng, hãy thử với email khác",
         });
       } else {
         let hashPasswordFromBcrypt = await hashUserPassword(data.password);
@@ -165,7 +165,7 @@ let createNewUser = async (data) => {
       if (check === true) {
         resolve({
           errCode: 1,
-          errMessage: "Your email is already in used, plz try another email!!",
+          errMessage: "Email đã được sử dụng, hãy thử với email khác",
         });
       } else {
         let hashPasswordFromBcrypt = await hashUserPassword(data.password);
@@ -213,7 +213,7 @@ let deleteUser = (userId) => {
       if (!user) {
         resolve({
           errCode: 2,
-          errMessage: `The user isn't exist`,
+          errMessage: `Người dùng không tồn tại`,
         });
       }
       if (user) {
@@ -223,7 +223,7 @@ let deleteUser = (userId) => {
       }
       resolve({
         errCode: 0,
-        errMessage: `The user is deleted`,
+        errMessage: `Người dùng đã bị xóa`,
       });
     } catch (e) {
       reject(e);
@@ -238,7 +238,7 @@ let updateTokenUserData = (userId, tokenUser) => {
       if (!userId) {
         resolve({
           errCode: 2,
-          errMessage: "Missing input parameter",
+          errMessage: "Thiếu dữ liệu đầu vào",
         });
       }
       let user = await db.User.findOne({
@@ -251,12 +251,12 @@ let updateTokenUserData = (userId, tokenUser) => {
 
         resolve({
           errCode: 0,
-          message: "Update the token user succeed!",
+          message: "Cập nhật token thành công",
         });
       } else {
         resolve({
           errCode: 1,
-          errMessage: `User's not found!`,
+          errMessage: `Người dùng không tồn tại`,
         });
       }
     } catch (e) {
@@ -272,7 +272,7 @@ let updateUserData = (data) => {
       if (!data.id) {
         resolve({
           errCode: 2,
-          errMessage: "Missing required parameter",
+          errMessage: "Thiếu dữ liệu đầu vào",
         });
       }
       let user = await db.User.findOne({
@@ -295,12 +295,12 @@ let updateUserData = (data) => {
 
         resolve({
           errCode: 0,
-          message: "Update the user succeed!",
+          message: "Cập nhật người dùng thành công",
         });
       } else {
         resolve({
           errCode: 1,
-          errMessage: `User's not found!`,
+          errMessage: `Người dùng không tồn tại`,
         });
       }
     } catch (e) {
@@ -334,7 +334,7 @@ let getAllCodeService = (typeInput) => {
       if (!typeInput) {
         resolve({
           errCode: 1,
-          errMessage: "Missing required parameters",
+          errMessage: "Thiếu dữ liệu đầu vào",
         });
       } else {
         let res = {};
@@ -368,7 +368,7 @@ let postCofirmAccountService = (data) => {
       if (!data.email) {
         resolve({
           errCode: 1,
-          errMessage: "Missing required parameter",
+          errMessage: "Thiếu dữ liệu đầu vào",
         });
       } else {
         let tokenUser = uuidv4(); // ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d' -random
@@ -388,12 +388,12 @@ let postCofirmAccountService = (data) => {
           user.save();
           resolve({
             errCode: 0,
-            message: "PLz check your email",
+            message: "Hãy kiểm tra email của bạn",
           });
         } else {
           resolve({
             errCode: 1,
-            errMessage: `User's not found!`,
+            errMessage: `Người dùng không tồn tại`,
           });
         }
       }
@@ -409,7 +409,7 @@ let postConFirmNewAccountEmail = async (data) => {
       if (!data.tokenUser || !data.email) {
         resolve({
           errCode: 1,
-          errMessage: "Missing required parameter",
+          errMessage: "Thiếu dữ liệu đầu vào",
         });
       } else {
         let user = await db.User.findOne({
@@ -423,12 +423,12 @@ let postConFirmNewAccountEmail = async (data) => {
 
           resolve({
             errCode: 0,
-            message: "Authicate your account succeed!",
+            message: "Xác thực tài khoản thành công",
           });
         } else {
           resolve({
             errCode: 2,
-            errMessage: `Account user has been activated or does not exist!!`,
+            errMessage: `Tài khoản đã được xác thực hoặc không tồn tại`,
           });
         }
       }
@@ -445,7 +445,7 @@ let postForgotPasswordService = (data) => {
       if (!data.email) {
         resolve({
           errCode: 1,
-          errMessage: "Missing required parameter",
+          errMessage: "Thiếu dữ liệu đầu vào",
         });
       } else {
         let tokenUser = uuidv4(); // ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d' -random
@@ -465,12 +465,12 @@ let postForgotPasswordService = (data) => {
 
           resolve({
             errCode: 0,
-            message: "Update the user and send Forgot Password email succeed!",
+            message: "Gửi email lấy lại mật khẩu thành công",
           });
         } else {
           resolve({
             errCode: 1,
-            errMessage: `User's not found!`,
+            errMessage: `Người dùng không tồn tại`,
           });
         }
       }
@@ -486,7 +486,7 @@ let postVerifyRetrievePasswordService = async (data) => {
       if (!data.tokenUser || !data.email || !data.newPassword) {
         resolve({
           errCode: 1,
-          errMessage: "Missing required parameter",
+          errMessage: "Thiếu dữ liệu đầu vào",
         });
       } else {
         let hashPasswordFromBcrypt = await hashUserPassword(data.newPassword);
@@ -503,12 +503,12 @@ let postVerifyRetrievePasswordService = async (data) => {
 
           resolve({
             errCode: 0,
-            message: "Change user password succeed!",
+            message: "Đổi mật khẩu thành công",
           });
         } else {
           resolve({
             errCode: 2,
-            errMessage: `User's not found!`,
+            errMessage: `Người dùng không tồn tại`,
           });
         }
       }

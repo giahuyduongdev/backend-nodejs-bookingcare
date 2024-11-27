@@ -201,7 +201,7 @@ let saveDetailInforDoctor = (inputData) => {
         }
         resolve({
           errCode: 0,
-          errMessage: "Save infor doctor succeed!",
+          errMessage: "Lưu thông tin bác sĩ thành công",
         });
       }
     } catch (e) {
@@ -216,7 +216,7 @@ let getDetailDoctorById = (inputId) => {
       if (!inputId) {
         resolve({
           errCode: 1,
-          errMessage: "Missing required parameter!",
+          errMessage: "Thiếu dữ liệu đầu vào!",
         });
       } else {
         let data = await db.User.findOne({
@@ -288,7 +288,7 @@ let getExtraInforDoctorById = (doctorId) => {
       if (!doctorId) {
         resolve({
           errCode: 1,
-          errMessage: "Missing required parameter",
+          errMessage: "Thiếu dữ liệu đầu vào",
         });
       } else {
         let data = await db.Doctor_Infor.findOne({
@@ -337,7 +337,7 @@ let getProfileDoctorById = (doctorId) => {
       if (!doctorId) {
         resolve({
           errCode: 1,
-          errMessage: "Missing required parameter",
+          errMessage: "Thiếu dữ liệu đầu vào",
         });
       } else {
         let data = await db.User.findOne({
@@ -454,7 +454,7 @@ let getScheduleByDate = (doctorId, date) => {
       if (!doctorId || !date) {
         resolve({
           errCode: 1,
-          errMessage: "Missing required parameter",
+          errMessage: "Thiếu dữ liệu đầu vào",
         });
       } else {
         let dataSchedule = await db.Schedule.findAll({
@@ -514,7 +514,7 @@ let getScheduleByDate = (doctorId, date) => {
 //       if (!doctorId || !date || !timeType) {
 //         resolve({
 //           errCode: 1,
-//           errMessage: "Missing required parameter",
+//           errMessage: "Thiếu dữ liệu đầu vào",
 //         });
 //       } else {
 //         let dataSchedule = await db.Schedule.findOne({
@@ -546,7 +546,7 @@ let getListPatientForDoctor = (doctorId, date) => {
       if (!doctorId || !date) {
         resolve({
           errCode: 1,
-          errMessage: "Missing required parameter",
+          errMessage: "Thiếu dữ liệu đầu vào",
         });
       } else {
         let data = await db.Booking.findAll({
@@ -602,7 +602,7 @@ let cancelBooking = (data) => {
       if (!data.date || !data.doctorId || !data.patientId || !data.timeType || !data.id) {
         resolve({
           errCode: 1,
-          errMessage: "Missing required parameter",
+          errMessage: "Thiếu dữ liệu đầu vào",
         });
       } else {
         //update booking status
@@ -639,7 +639,7 @@ let cancelBookingEmail = (data) => {
       if (!data.date || !data.doctorId || !data.patientId || !data.timeType || !data.note || !data.date || !data.dateString || !data.month || !data.year || !data.time ||!data.id) {
         resolve({
           errCode: 1,
-          errMessage: "Missing required parameter",
+          errMessage: "Thiếu dữ liệu đầu vào",
         });
       } else {
         //update booking status
@@ -708,7 +708,7 @@ let sendRemedy = (data) => {
       if (!data.email || !data.doctorId || !data.patientId || !data.timeType) {
         resolve({
           errCode: 1,
-          errMessage: "Missing required parameter",
+          errMessage: "Thiếu dữ liệu đầu vào",
         });
       } else {
         //update patient status
@@ -788,7 +788,7 @@ let createRemedy = (data) => {
       ) {
         resolve({
           errCode: 1,
-          errMessage: "Missing required parameter",
+          errMessage: "Thiếu dữ liệu đầu vào",
         });
       } else {
         //create image remedy

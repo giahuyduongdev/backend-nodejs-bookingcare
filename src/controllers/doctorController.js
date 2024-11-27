@@ -10,7 +10,7 @@ let getTopDoctorHome = async (req, res) => {
     console.log(e);
     return res.status(200).json({
       errCode: -1,
-      message: "Error from server...",
+      message: "Lỗi...",
     });
   }
 };
@@ -23,7 +23,7 @@ let getAllDoctors = async (req, res) => {
     console.log(e);
     return res.status.json({
       errCode: -1,
-      errMessage: "Error from server",
+      errMessage: "Lỗi",
     });
   }
 };
@@ -36,7 +36,7 @@ let postInforDoctor = async (req, res) => {
     console.log(e);
     return res.status.json({
       errCode: -1,
-      errMessage: "Error from server",
+      errMessage: "Lỗi",
     });
   }
 };
@@ -49,7 +49,7 @@ let getDetailDoctorById = async (req, res) => {
     console.log(e);
     return res.status(200).json({
       errCode: -1,
-      errMessage: "Error from server",
+      errMessage: "Lỗi",
     });
   }
 };
@@ -62,7 +62,7 @@ let getExtraInforDoctorById = async (req, res) => {
     console.log(e);
     return res.status(200).json({
       errCode: -1,
-      errMessage: "Error from server",
+      errMessage: "Lỗi",
     });
   }
 };
@@ -75,7 +75,7 @@ let getProfileDoctorById = async (req, res) => {
     console.log(e);
     return res.status(200).json({
       errCode: -1,
-      errMessage: "Error from server",
+      errMessage: "Lỗi",
     });
   }
 };
@@ -88,7 +88,7 @@ let bulkCreateSchedule = async (req, res) => {
     console.log(e);
     return res.status(200).json({
       errCode: -1,
-      errMessage: "Error from server",
+      errMessage: "Lỗi",
     });
   }
 };
@@ -104,7 +104,7 @@ let getScheduleByDate = async (req, res) => {
     console.log(e);
     return res.status(200).json({
       errCode: -1,
-      errMessage: "Error from server",
+      errMessage: "Lỗi",
     });
   }
 };
@@ -121,7 +121,7 @@ let getScheduleByDate = async (req, res) => {
 //     console.log(e);
 //     return res.status(200).json({
 //       errCode: -1,
-//       errMessage: "Error from server",
+//       errMessage: "Lỗi",
 //     });
 //   }
 // };
@@ -137,7 +137,7 @@ let getListPatientForDoctor = async (req, res) => {
     console.log(e);
     return res.status(200).json({
       errCode: -1,
-      errMessage: "Error from server",
+      errMessage: "Lỗi",
     });
   }
 };
@@ -150,7 +150,7 @@ let sendRemedy = async (req, res) => {
     console.log(e);
     return res.status(200).json({
       errCode: -1,
-      errMessage: "Error from server",
+      errMessage: "Lỗi",
     });
   }
 };
@@ -163,7 +163,7 @@ let createRemedy = async (req, res) => {
     console.log(e);
     return res.status(200).json({
       errCode: -1,
-      errMessage: "Error from server",
+      errMessage: "Lỗi",
     });
   }
 };
@@ -176,7 +176,7 @@ let cancelBooking = async (req, res) => {
     console.log(e);
     return res.status(200).json({
       errCode: -1,
-      errMessage: "Error from server",
+      errMessage: "Lỗi",
     });
   }
 };
@@ -189,7 +189,7 @@ let cancelBookingEmail = async (req, res) => {
     console.log(e);
     return res.status(200).json({
       errCode: -1,
-      errMessage: "Error from server",
+      errMessage: "Lỗi",
     });
   }
 };

@@ -8,7 +8,7 @@ let createSpecialty = async (req, res) => {
     console.log(e);
     return res.status(200).json({
       errCode: -1,
-      errMessage: "Error from server",
+      errMessage: "Lỗi",
     });
   }
 };
@@ -21,7 +21,7 @@ let getAllSpecialty = async (req, res) => {
     console.log(e);
     return res.status(200).json({
       errCode: -1,
-      errMessage: "Error from server",
+      errMessage: "Lỗi",
     });
   }
 };
@@ -37,7 +37,7 @@ let getDetailSpecialtyById = async (req, res) => {
     console.log(e);
     return res.status(200).json({
       errCode: -1,
-      errMessage: "Error from server",
+      errMessage: "Lỗi",
     });
   }
 };

@@ -6,7 +6,7 @@ let handleLogin = async (req, res) => {
   if(!email || !password){
     return res.status(500).json({
       errCode: 1,
-      message: 'Missing inputs parameter!'
+      message: 'Thiếu dữ liệu đầu vào'
     })
   };
 
@@ -23,7 +23,7 @@ let handleGetAllUsers = async (req, res) =>{
   if(!id){
     return res.status(500).json({
       errCode: 1,
-      errMessage: 'Missing required parameters',
+      errMessage: 'Thiếu dữ liệu đầu vào',
       users: [],
     })
   }
@@ -39,7 +39,7 @@ let handleGetAllUsers = async (req, res) =>{
   {
     return res.status(200).json({
       errCode: 2,
-      errMessage: 'User not found',
+      errMessage: 'Người dùng không tồn tại',
       users: [],
     });
   }
@@ -61,7 +61,7 @@ let handleDeleteUser = async (req, res) =>{
   if(!id){
     return res.status(500).json({
       errCode: 1,
-      errMessage: 'Missing required parameters!'
+      errMessage: 'Thiếu dữ liệu đầu vào!'
     })
   }
   let message = await userService.deleteUser(id);
@@ -142,7 +142,7 @@ let getUserInfoProfile = async(req, res) =>{
   if(!email){
     return res.status(500).json({
       errCode: 1,
-      errMessage: 'Missing required parameters',
+      errMessage: 'Thiếu dữ liệu đầu vào',
       users: [],
     })
   }
@@ -158,7 +158,7 @@ let getUserInfoProfile = async(req, res) =>{
   {
     return res.status(200).json({
       errCode: 2,
-      errMessage: 'User not found',
+      errMessage: 'Người dùng không tồn tại',
       users: [],
     });
   }
