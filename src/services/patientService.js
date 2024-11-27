@@ -3,6 +3,7 @@ require("dotenv").config();
 import emailService from "./emailService";
 import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcryptjs";
+import { InvalidConnectionError, Model } from "sequelize";
 const salt = bcrypt.genSaltSync(10);
 
 let buildUrlEmail = (doctorId, token) => {
@@ -168,7 +169,81 @@ let postVerifyBookAppointment =  (data) => {
     }
   });
 };
+
+let getListAppointmentForPatient = (patientId, date) =>{
+  return new Promise(async (resolve, reject) =>{
+    try{
+      if(!patientId || !date){
+        resolve({
+          errCode: 1,
+          errMessage: "Missing required parameter",
+        });
+      }
+      else{
+        let data = await db.Booking.findAll({
+          where: {patientId: patientId, date: date },
+          attributes: {
+            exclude: ["imageRemedy", "token", "createdAt", "updatedAt"],
+          },
+          include: [
+            {
+              model: db.User,
+              as: "doctorDataAppointment",
+              attributes: [ 
+                "id",
+                "email",
+                "firstName",
+                "lastName"
+              ],
+            },
+            {
+              model: db.Allcode,
+              as: "timeTypeDataPatient",
+              attributes: ["valueEn", "valueVi"],
+            },
+            {
+              model: db.Doctor_Infor,
+              as: "doctorDataAppointmentDetail",
+              attributes: ["addressClinic", "nameClinic"],
+              include: [
+                {
+                  model: db.Allcode,
+                  as: "priceTypeData",
+                  attributes: ["valueEn", "valueVi"]
+                },
+                {
+                  model: db.Allcode,
+                  as: "paymentTypeData",
+                  attributes: ["valueEn", "valueVi"]
+                },
+                {
+                  model: db.Specialty,
+                  as: "specialtyData",
+                  attributes: ["name"]
+                }
+              ]
+            }
+          ],
+          raw: true,
+          nest: true,
+        });
+        if (!data) {
+          data = {};
+        }
+        resolve({
+          errCode: 0,
+          data: data
+        });
+      }
+    }catch(e){
+      reject(e);
+    }
+  })
+}
+
+
 module.exports = {
   postBookAppointment: postBookAppointment,
   postVerifyBookAppointment: postVerifyBookAppointment,
+  getListAppointmentForPatient: getListAppointmentForPatient
 };

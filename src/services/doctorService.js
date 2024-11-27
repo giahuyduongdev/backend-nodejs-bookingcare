@@ -599,7 +599,7 @@ let getListPatientForDoctor = (doctorId, date) => {
 let cancelBooking = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (!data.date || !data.doctorId || !data.patientId || !data.timeType) {
+      if (!data.date || !data.doctorId || !data.patientId || !data.timeType || !data.id) {
         resolve({
           errCode: 1,
           errMessage: "Missing required parameter",
@@ -608,11 +608,11 @@ let cancelBooking = (data) => {
         //update booking status
         let appoinment = await db.Booking.findOne({
           where: {
+            id: data.id,
             doctorId: data.doctorId,
             patientId: data.patientId,
             timeType: data.timeType,
             date: data.date,
-            statusId: "S2",
           },
           raw: false,
         });
@@ -636,7 +636,7 @@ let cancelBooking = (data) => {
 let cancelBookingEmail = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (!data.date || !data.doctorId || !data.patientId || !data.timeType || !data.note || !data.date || !data.dateString || !data.month || !data.year || !data.time) {
+      if (!data.date || !data.doctorId || !data.patientId || !data.timeType || !data.note || !data.date || !data.dateString || !data.month || !data.year || !data.time ||!data.id) {
         resolve({
           errCode: 1,
           errMessage: "Missing required parameter",
@@ -645,6 +645,7 @@ let cancelBookingEmail = (data) => {
         //update booking status
         let appoinment = await db.Booking.findOne({
           where: {
+            id: data.id,
             doctorId: data.doctorId,
             patientId: data.patientId,
             timeType: data.timeType,

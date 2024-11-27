@@ -96,6 +96,8 @@ let initWebRoutes = (app) => {
   // Gửi đơn thuốc
 
 
+  router.get("/api/get-list-appointment-for-patient",patientController.getListAppointmentForPatient);
+
   router.get("/api/get-weekly-revenue", adminController.getWeeklyRevenue);
   // Lấy lợi nhuận trong tuần 
   router.get("/api/get-total-new-user-day", adminController.getTotalNewUserDay);
