@@ -309,6 +309,52 @@ let updateUserData = (data) => {
   });
 };
 
+let changeAccountPassword = (data) =>{
+  return new Promise (async(resolve,reject) =>{
+    try{
+      if(!data.id || !data.oldPassword || !data.newPassword){
+        resolve({
+          errCode: 2,
+          errMessage: "Thiếu dữ liệu đầu vào",
+        });
+      }
+      else{
+        let user = await db.User.findOne({
+          where: { id: data.id },
+          raw: false, 
+        });
+        if(user){
+          let check = await bcrypt.compareSync(data.oldPassword, user.password);
+          if(check){
+            let hashPasswordFromBcrypt = await hashUserPassword(data.newPassword);
+            user.password = hashPasswordFromBcrypt;
+            await user.save();
+
+            resolve({
+              errCode: 0,
+              message: "Cập nhật mật khẩu mới thành công",
+            });
+          }
+          else{
+            resolve({
+              errCode: 1,
+              message: "Mật khẩu hiện tại không đúng",
+            });
+          }
+        }
+        else{
+          resolve({
+            errCode: 1,
+            errMessage: `Người dùng không tồn tại`,
+          });
+        }
+      }
+    }catch(e){
+      reject(e);
+    }
+  });
+}
+
 let getUserInfoProfile = (userEmail) =>{
   return new Promise (async(resolve,reject) =>{
     try{
@@ -534,5 +580,6 @@ module.exports = {
   postVerifyRetrievePasswordService: postVerifyRetrievePasswordService,
   postCofirmAccountService: postCofirmAccountService,
   postConFirmNewAccountEmail: postConFirmNewAccountEmail,
-  getUserInfoProfile: getUserInfoProfile
+  getUserInfoProfile: getUserInfoProfile,
+  changeAccountPassword: changeAccountPassword
 };

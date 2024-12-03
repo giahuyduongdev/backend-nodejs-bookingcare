@@ -42,6 +42,8 @@ let initWebRoutes = (app) => {
   // Tạo mới một user
   router.put('/api/edit-user', userController.handleEditUser);
   // Chỉnh sửa tất cả thông tin của user
+  router.put('/api/change-password-user', userController.handleChangePassword);
+  // Đổi mật khẩu người dùng
   router.delete('/api/delete-user', userController.handleDeleteUser);
   // Xóa user
 

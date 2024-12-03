@@ -3,7 +3,7 @@ require("dotenv").config();
 import emailService from "./emailService";
 import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcryptjs";
-import { InvalidConnectionError, Model } from "sequelize";
+import { InvalidConnectionError, Model, where } from "sequelize";
 const salt = bcrypt.genSaltSync(10);
 
 let buildUrlEmail = (doctorId, token) => {
@@ -40,16 +40,50 @@ let postBookAppointment = (data) => {
       ) {
         resolve({
           errCode: 1,
-          errMessage: "Thiếu dữ liệu đầu vào",
+          errMessage: "Thông tin nhập còn thiếu",
         });
       } else {
         let token = uuidv4(); // ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'
-        let hashPasswordFromBcrypt = await hashUserPassword('123');
-        let check = await db.User.findOne({
+
+        let user = await db.User.findOne({
           where: { email: data.email },
-          raw: false, 
         });
-        if(check){
+
+        let check = await db.Booking.findOne({
+          where:{
+            patientId: user.id,
+            doctorId: data.doctorId,
+            timeType: data.timeType,
+            date: data.date,
+            statusId: 'S2'
+          },
+        });
+
+        let check1 = await db.Booking.findOne({
+          where:{
+            patientId: user.id,
+            doctorId: data.doctorId,
+            timeType: data.timeType,
+            date: data.date,
+            statusId: 'S3'
+          },
+        });
+
+        if(check || check1){
+          if(check){
+            resolve({
+              errCode: 2,
+              errMessage: "Bạn đang có lịch hẹn đã được xác nhận vào khung giờ này",
+            });
+          }
+          if(check1){
+            resolve({
+              errCode: 2,
+              errMessage: "Bạn đã có lịch hẹn hoàn thành khám vào khung giờ này",
+            });
+          }
+        }
+        else{
           await emailService.sendSimpleEmail({
             receiverEmail: data.email,
             patientName: data.fullName,
@@ -58,44 +92,13 @@ let postBookAppointment = (data) => {
             language: data.language,
             reason: data.reason,
             redirectLink: buildUrlEmail(data.doctorId, token),
-          });
-        }
-        else{
-          await emailService.sendSimpleEmailNew({
-            receiverEmail: data.email,
-            patientName: data.fullName,
-            time: data.timeString,
-            doctorName: data.doctorName,
-            language: data.language,
-            reason: data.reason,
-            redirectLink: buildUrlEmail(data.doctorId, token),
-          });
-        }
-
-
-        //upsert patient
-        let user = await db.User.findOrCreate({
-          where: { email: data.email },
-          defaults: {
-            email: data.email,
-            password: hashPasswordFromBcrypt,
-            roleId: "R3",
-            gender: data.selectedGender,
-            address: data.address,
-            firstName: data.fullName,
-            phonenumber: data.phonenumber,
-            birthday: data.birthday,
-            authicated: 'yes'
-          },
         });
 
-
-        //create a booking record
-        if (user && user[0]) {
+        if (user) {
           await db.Booking.create({
             statusId: "S1",
             doctorId: data.doctorId,
-            patientId: user[0].id,
+            patientId: user.id,
             date: data.date,
             timeType: data.timeType, 
             token: token,
@@ -103,31 +106,11 @@ let postBookAppointment = (data) => {
           });
         }
 
-        // let user1 = await db.User.findOne({
-        //   where: { email: data.email },
-        //   raw: false, 
-        // });
-        // if(user1){
-        //   user1.birthday = data.birthday;
-        //   await user1.save()
-        // }
-        // if (user && user[0]) {
-        //   await db.Booking.findOrCreate({
-        //     where: { patientId: user[0].id },
-        //     defaults: {
-        //       statusId: "S1",
-        //       doctorId: data.doctorId,
-        //       patientId: user[0].id,
-        //       date: data.date,
-        //       timeType: data.timeType,
-        //       token: token,
-        //     },
-        //   });
-        // }
         resolve({
           errCode: 0,
-          errMessage: "Save infor patient succeed!",
+          errMessage: "Lưu thông tin lịch hẹn thành công",
         });
+        }
       }
     } catch (e) {
       reject(e);
@@ -155,12 +138,12 @@ let postVerifyBookAppointment =  (data) => {
           await appointment.save();
           resolve({
             errCode: 0,
-            errMessage: "Update the appointment succeed!",
+            errMessage: "Cập nhật lịch hẹn thành công",
           });
         } else {
           resolve({
             errCode: 2,
-            errMessage: "Appointment has been activated or does not exist!",
+            errMessage: "Lịch hẹn đã được xác nhận hoặc không tồn tại",
           });
         }
       }

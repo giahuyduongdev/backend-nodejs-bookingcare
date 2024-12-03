@@ -74,6 +74,12 @@ let handleEditUser = async (req, res) =>{
   return res.status(200).json(message);
 }
 
+let handleChangePassword = async (req, res) =>{
+  let data = req.body;
+  let message = await userService.changeAccountPassword(data);
+  return res.status(200).json(message);
+}
+
 let getAllCode = async (req, res) => {
   try {
     let data = await userService.getAllCodeService(req.query.type);
@@ -176,5 +182,6 @@ module.exports = {
   postVerifyRetrievePassword: postVerifyRetrievePassword,
   postConFirmNewAccount: postConFirmNewAccount,
   postConfirmNewAccountEmail: postConfirmNewAccountEmail,
-  getUserInfoProfile: getUserInfoProfile
+  getUserInfoProfile: getUserInfoProfile,
+  handleChangePassword: handleChangePassword
 };

@@ -57,71 +57,6 @@ let getBodyHTMLEmail = (dataSend) => {
   return result;
 };
 
-let sendSimpleEmailNew = async (dataSend) => {
-  // create reusable transporter object using the default SMTP transport
-  let transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
-      user: process.env.EMAIL_APP, // generated ethereal user
-      pass: process.env.EMAIL_APP_PASSWORD, // generated ethereal password
-    },
-  });
-
-  // send mail with defined transport object
-  let info = await transporter.sendMail({
-    from: '"BookingCare" <notificationbookingcare@gmail.com>', // sender address
-    to: dataSend.receiverEmail, // list of receivers
-    subject: "Thông tin đặt lịch khám bệnh", // Subject line
-    html: getBodyHTMLEmailNew(dataSend),
-  });
-};
-
-let getBodyHTMLEmailNew = (dataSend) => {
-  let result = "";
-  if (dataSend.language === "vi") {
-    result = `
-<h3><b>Xin chào ${dataSend.patientName}!</b></h3>
-<p>Bạn nhận được email này vì đã đặt lịch khám bệnh online trên BookingCare</p>
-<p>Thông tin đặt lịch khám bệnh:</p>
-<div><b>Thời gian: ${dataSend.time}</b></div>
-<div><b>Bác sĩ khám: ${dataSend.doctorName}</b></div>
-<div><b>Lý do khám: ${dataSend.reason} </b></div>
-
-<p>Thông tin tài khoản được tạo:</p>
-<div><b>Tài khoản: ${dataSend.receiverEmail} </b></div>
-<div><b>Mật khẩu mặc định: 123 </b></div>
-<div><b>Vui lòng đổi mật khẩu khi đăng nhập và không chia sẻ mật khẩu cho bất kỳ ai! </b></div>
-
-<p>Nếu các thông tin trên là đúng sự thật, vui lòng click vào đường link bên dưới để hoàn tất thủ tục đặt lịch khám bệnh.</p>
-<div><a href=${dataSend.redirectLink} target="_blank">Click here</a></div>
-
-<div>Xin chân thành cảm ơn!</div>
-`;
-  }
-  if (dataSend.language === "en") {
-    result = `
-    <h3><b>Dear ${dataSend.patientName}!</b></h3>
-    <p>You received this email because you booked an online medical appointment on BookingCare</p>
-    <p>Information to schedule an appointment:</p>
-    <div><b>Time: ${dataSend.time}</b></div>
-    <div><b>Doctor: ${dataSend.doctorName}</b></div>
-
-    <p>Created account information:</p>
-    <div><b>Username: ${dataSend.receiverEmail} </b></div>
-    <div><b>Default password: 123 </b></div>
-    <div><b>Please change your password when logging in and do not share your password with anyone! </b></div>
-    
-    <p>If the above information is true, please click on the link below to complete the procedure to book an appointment.</p>
-    <div><a href=${dataSend.redirectLink} target="_blank">Click here</a></div>
-    
-    <div>Sincerely thank!</div>
-    `;
-  }
-  return result;
-};
-
 let getBodyHTMLEmailRemedy = (dataSend) => {
   let result = "";
   if (dataSend.language === "vi") {
@@ -299,5 +234,4 @@ module.exports = {
   sendForgotPasswordEmail: sendForgotPasswordEmail,
   sendConfirmAccountEmail : sendConfirmAccountEmail,
   sendCancelBookingEmail: sendCancelBookingEmail,
-  sendSimpleEmailNew: sendSimpleEmailNew
 };
