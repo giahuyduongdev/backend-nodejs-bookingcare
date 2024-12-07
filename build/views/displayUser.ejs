@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Read User</title>
+  </head>
+  <style>
+    table,
+    th,
+    td {
+      border: 1px solid black;
+      border-collapse: collapse;
+      text-align: center;
+    }
+    .btn-edit,
+    .btn-delete {
+      outline: none;
+      border: none;
+      background: orange;
+      height: 25px;
+      width: 60px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    .btn-delete {
+      background: red;
+    }
+  </style>
+  <body>
+    <table style="width: 100%">
+      <tr>
+        <th>Email</th>
+        <th>FirstName</th>
+        <th>LastName</th>
+        <th>Address</th>
+        <th>Actions</th>
+      </tr>
+      <% for(var i=0; i < data.length; i++) { %>
+      <tr>
+        <td><%= data[i].email %></td>
+        <td><%= data[i].firstName %></td>
+        <td><%= data[i].lastName %></td>
+        <td><%= data[i].address %></td>
+        <td>
+          <a
+            href="/edit-user?id=<%=data[i].id %>"
+            class="btn-edit"
+            type="Button"
+            >Edit</a
+          >
+          <a
+            href="/delete-user?id=<%=data[i].id %>" 
+            class="btn-delete">Dele</a>
+        </td>
+      </tr>
+      <% } %>
+    </table>
+  </body>
+</html>

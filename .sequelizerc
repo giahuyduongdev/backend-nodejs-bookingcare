@@ -1,8 +1,10 @@
 const path = require("path");
 
 module.exports = {
-  config: path.resolve("./src/config", "config.json"), // Kết nối dữ liệu
+  // config: path.resolve("./src/config", "config.json"), // Kết nối dữ liệu
+  config: path.resolve("./src/config", "config.js"),
   "migrations-path": path.resolve("./src", "migrations"), // Tạo dữ liệu 
   "models-path": path.resolve("./src", "models"),   // Mô tả cấu trức dữ liệu
   "seeders-path": path.resolve("./src", "seeders"), // Dữ liệu mẫu
 };
+ 

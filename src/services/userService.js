@@ -326,10 +326,15 @@ let changeAccountPassword = (data) =>{
         if(user){
           let check = await bcrypt.compareSync(data.oldPassword, user.password);
           if(check){
+            if(data.oldPassword === data.newPassword){
+              resolve({
+                errCode: 1,
+                message: "Mật khẩu mới không được giống mật khẩu cũ",
+              });
+            }
             let hashPasswordFromBcrypt = await hashUserPassword(data.newPassword);
             user.password = hashPasswordFromBcrypt;
             await user.save();
-
             resolve({
               errCode: 0,
               message: "Cập nhật mật khẩu mới thành công",
