@@ -34,6 +34,18 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE,
       },
+      imageRemedy:{
+        type: Sequelize.BLOB("long"),
+        allowNull: true,
+      },
+      note:{
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      reason: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      }
     });
   },
   down: async (queryInterface, Sequelize) => {
