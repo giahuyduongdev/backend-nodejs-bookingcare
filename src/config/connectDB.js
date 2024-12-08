@@ -1,3 +1,4 @@
+const { query } = require('express');
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
@@ -15,7 +16,11 @@ const sequelize = new Sequelize(
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   dialect: process.env.DB_DIALECT,
-  logging : false
+  logging : false,
+  query:{
+    "raw": true
+  },
+  timezone: "+07:00"
 });
 
 let connectDB = async () => {
