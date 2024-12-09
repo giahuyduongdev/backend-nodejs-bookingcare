@@ -21,6 +21,12 @@ var sequelize = new Sequelize(process.env.DB_DATABASE_NAME, process.env.DB_USERN
   port: process.env.DB_PORT,
   dialect: process.env.DB_DIALECT,
   logging: false,
+  dialectOptions: process.env.DB_SSL === 'true' ? {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false
+    }
+  } : {},
   query: {
     "raw": true
   },

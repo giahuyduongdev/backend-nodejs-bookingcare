@@ -46,7 +46,16 @@ module.exports = {
                 type: Sequelize.STRING
               },
               image: {
-                type: Sequelize.STRING
+                type: Sequelize.BLOB("long"),
+                allowNull: true
+              },
+              authicated: {
+                type: Sequelize.STRING,
+                allowNull: true
+              },
+              birthday: {
+                type: Sequelize.DATE,
+                allowNull: true
               },
               createdAt: {
                 allowNull: false,
@@ -55,6 +64,20 @@ module.exports = {
               updatedAt: {
                 allowNull: false,
                 type: Sequelize.DATE
+              },
+              tokenUser: {
+                type: Sequelize.STRING,
+                allowNull: true
+              },
+              totalCost: {
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
+                allowNull: true
+              },
+              totalRevenue: {
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
+                allowNull: true
               }
             });
           case 2:

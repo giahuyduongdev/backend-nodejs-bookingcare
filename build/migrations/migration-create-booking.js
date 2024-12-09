@@ -43,6 +43,18 @@ module.exports = {
               updatedAt: {
                 allowNull: false,
                 type: Sequelize.DATE
+              },
+              imageRemedy: {
+                type: Sequelize.BLOB("long"),
+                allowNull: true
+              },
+              note: {
+                type: Sequelize.STRING,
+                allowNull: true
+              },
+              reason: {
+                type: Sequelize.STRING,
+                allowNull: true
               }
             });
           case 2:

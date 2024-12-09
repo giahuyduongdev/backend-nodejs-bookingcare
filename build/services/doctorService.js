@@ -558,7 +558,7 @@ var bulkCreateSchedule = function bulkCreateSchedule(data) {
             return _index["default"].Schedule.findAll({
               where: {
                 doctorId: data.doctorId,
-                date: data.date
+                date: '' + data.date
               },
               attributes: ["timeType", "date", "doctorId", "maxNumber"],
               raw: true

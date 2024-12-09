@@ -14,10 +14,16 @@ var customizeConfig = {
   port: process.env.DB_PORT,
   dialect: process.env.DB_DIALECT,
   logging: false,
-  "query": {
+  dialectOptions: process.env.DB_SSL === 'true' ? {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false
+    }
+  } : {},
+  query: {
     "raw": true
   },
-  "timezone": "+07:00"
+  timezone: "+07:00"
 };
 sequelize = new Sequelize(process.env.DB_DATABASE_NAME, process.env.DB_USERNAME, process.env.DB_PASSWORD, customizeConfig);
 fs.readdirSync(__dirname).filter(function (file) {
